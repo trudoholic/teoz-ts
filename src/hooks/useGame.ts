@@ -16,7 +16,6 @@ const useGame = () => {
 
   const beginGame = (n: number) => {
     dispatch({type: Actions.SetGameOver, payload: false})
-    // dispatch({type: Actions.SetPlayers, payload: n})
     dispatch({type: Actions.SetPlayers, payload: getPlayers(n)})
   }
 
@@ -25,7 +24,6 @@ const useGame = () => {
   }
 
   const newGame = () => {
-    // dispatch({type: Actions.SetPlayers, payload: 0})
     dispatch({type: Actions.SetPlayers, payload: []})
   }
 

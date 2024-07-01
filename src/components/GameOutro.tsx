@@ -8,7 +8,7 @@ const GameOutro = () => {
 
   return (
     <>
-      <h1>Game Outro {nPlayers}</h1>
+      <h2>Game Outro {nPlayers}</h2>
       <button onClick={newGame}>
         GameOutro
       </button>

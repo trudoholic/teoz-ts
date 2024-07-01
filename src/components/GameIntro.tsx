@@ -7,7 +7,7 @@ const GameIntro = () => {
 
   return (
     <>
-      <h1>Game Intro</h1>
+      <h2>Game Intro</h2>
       <button onClick={() => beginGame(2)}>
         Begin Game [2]
       </button>
