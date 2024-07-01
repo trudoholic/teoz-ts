@@ -1,13 +1,13 @@
-import useAppContext from "../context/useAppContext"
-import {IState} from "../context/state"
-
 import GameIntro from "./GameIntro"
 import GameMain from "./GameMain"
 import GameOutro from "./GameOutro"
+import useGame from "../hooks/useGame"
 
 const Main = () => {
-  const { state } = useAppContext()
-  const { isGameOver, nPlayers } = state as IState
+  const {
+    isGameOver,
+    nPlayers,
+  } = useGame()
 
   return (
     <>
