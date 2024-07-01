@@ -1,19 +1,17 @@
 import useAppContext from "../context/useAppContext"
-import {Actions} from "../context/reducer"
 import {IState} from "../context/state"
 
+import GameIntro from "./GameIntro"
+import GameMain from "./GameMain"
+import GameOutro from "./GameOutro"
+
 const Main = () => {
-  const { state, dispatch } = useAppContext()
-  const {count} = state as IState
-  const setCount = (n: number) => {
-    dispatch({type: Actions.SetCount, payload: n})
-  }
+  const { state } = useAppContext()
+  const { isGameOver, nPlayers } = state as IState
 
   return (
     <>
-      <button onClick={() => setCount(count + 1)}>
-        count is {count}
-      </button>
+      { 0 === nPlayers? <GameIntro/>: isGameOver? <GameOutro/>: <GameMain/> }
     </>
   )
 }

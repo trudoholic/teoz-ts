@@ -7,10 +7,7 @@ function App() {
   return (
     <>
       <ContextProvider>
-        <h1>Set Count</h1>
-        <div className="card">
-          <Main/>
-        </div>
+        <Main/>
       </ContextProvider>
     </>
   )

@@ -1,9 +1,11 @@
 // import {cards, ICard} from "../data/cards"
 
 export interface IState {
-  count: number
+  isGameOver: boolean,
+  nPlayers: number,
 }
 
 export const defaultState: IState = {
-  count: 0
+  isGameOver: true,
+  nPlayers: 0,
 }
