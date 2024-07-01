@@ -1,4 +1,4 @@
-import {useAppContext} from "../context"
+import useAppContext from "../context/useAppContext"
 import {Actions} from "../context/reducer"
 import {IState} from "../context/state"
 
