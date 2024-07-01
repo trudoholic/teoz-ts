@@ -1,5 +1,6 @@
 import {IState} from "./state"
 // import {ICard} from "../data/cards"
+import { IPlayer } from "../data/players"
 
 export enum Actions {
   SetGameOver,
@@ -8,7 +9,7 @@ export enum Actions {
 
 export type TAction =
   | { type: Actions.SetGameOver, payload: boolean }
-  | { type: Actions.SetPlayers, payload: number }
+  | { type: Actions.SetPlayers, payload: IPlayer[] }
 
 export const reducer = (state: IState, action: TAction): IState => {
   switch (action.type) {
@@ -21,7 +22,8 @@ export const reducer = (state: IState, action: TAction): IState => {
 
     case Actions.SetPlayers: {
       return { ...state,
-        nPlayers: action.payload,
+        nPlayers: action.payload.length,
+        players: action.payload,
       }
     }
 
