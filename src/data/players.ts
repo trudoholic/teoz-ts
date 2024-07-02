@@ -5,7 +5,7 @@ export interface IPlayer {
   // value: number
 }
 
-export const commonId = "_"
+export const commonId = "0"
 
 export const rawPlayers: IPlayer[] = [
   {

@@ -10,7 +10,7 @@ const GameOutro = () => {
     <>
       <h2>Game Outro {nPlayers}</h2>
       <button onClick={newGame}>
-        GameOutro
+        New Game
       </button>
     </>
   )

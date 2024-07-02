@@ -55,21 +55,21 @@ export default createGlobalStyle`
     }
 
     button {
-      border-radius: 8px;
+      background-color: #263238;
       border: 1px solid transparent;
-      margin: 0.8rem 1.6rem;
-      padding: 0.8rem 1.6rem;
+      border-radius: 8px;
+      color: #ccc;
+      cursor: pointer;
       font-size: 1.6rem;
       font-weight: 500;
       font-family: inherit;
-      color: #ccc;
-      background-color: #1a1a1a;
-      cursor: pointer;
+      margin: 0.8rem 1.6rem;
+      padding: 0.8rem 1.6rem;
       transition: border-color 0.25s;
     }
     button:enabled:hover {
-      color: #646cff;
       border-color: #646cff;
+      color: #646cff;
     }
     button:disabled {
       color: #369;

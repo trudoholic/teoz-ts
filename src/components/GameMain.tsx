@@ -1,5 +1,6 @@
-import useGame from "../hooks/useGame"
 import styled from "styled-components"
+import useGame from "../hooks/useGame"
+import Commands from "./Commands"
 
 export const MainContainer = styled.div`
   //background: olive;
@@ -14,7 +15,6 @@ const GameMain = () => {
   const {
     nPlayers,
     players,
-    endGame,
   } = useGame()
 
   const divStyle = {
@@ -31,6 +31,7 @@ const GameMain = () => {
       <h2>Game Main {nPlayers}</h2>
 
       <MainContainer>
+
         <div style={divStyle}>
           Common
         </div>
@@ -41,15 +42,9 @@ const GameMain = () => {
             {p.name}
           </div>)
         }
+        <Commands/>
 
-        <div style={divStyle}>
-          Commands
-        </div>
       </MainContainer>
-
-      <button onClick={endGame}>
-        GameMain
-      </button>
     </>
   )
 }
