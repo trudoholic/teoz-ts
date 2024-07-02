@@ -1,6 +1,7 @@
 import styled from "styled-components"
 import useGame from "../hooks/useGame"
 import Commands from "./Commands"
+import Player from "./Player"
 
 export const MainContainer = styled.div`
   //background: olive;
@@ -37,12 +38,7 @@ const GameMain = () => {
           Common
         </div>
 
-        {/*{players.map((p, i) => <Player key={p.id} idx={i} />)}*/}
-        {
-          players.map(p => <div key={p.id} style={divStyle}>
-            {p.name}
-          </div>)
-        }
+        {players.map((p, i) => <Player key={p.id} idx={i} />)}
         <Commands/>
 
       </MainContainer>
