@@ -3,16 +3,24 @@ import {IState} from "./state"
 import { IPlayer } from "../data/players"
 
 export enum Actions {
+  SetCurHand,
   SetGameOver,
   SetPlayers,
 }
 
 export type TAction =
+  | { type: Actions.SetCurHand, payload: number }
   | { type: Actions.SetGameOver, payload: boolean }
   | { type: Actions.SetPlayers, payload: IPlayer[] }
 
 export const reducer = (state: IState, action: TAction): IState => {
   switch (action.type) {
+
+    case Actions.SetCurHand: {
+      return { ...state,
+        curHand: action.payload,
+      }
+    }
 
     case Actions.SetGameOver: {
       return { ...state,

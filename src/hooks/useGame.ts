@@ -7,6 +7,7 @@ import { rawPlayers } from "../data/players"
 const useGame = () => {
   const { state, dispatch } = useAppContext()
   const {
+    curHand,
     isGameOver,
     nPlayers,
     players,
@@ -15,6 +16,7 @@ const useGame = () => {
   const getPlayers = (n: number) => rawPlayers.slice(0, n)
 
   const beginGame = (n: number) => {
+    dispatch({type: Actions.SetCurHand, payload: Math.floor(Math.random() * n)})
     dispatch({type: Actions.SetGameOver, payload: false})
     dispatch({type: Actions.SetPlayers, payload: getPlayers(n)})
   }
@@ -27,7 +29,12 @@ const useGame = () => {
     dispatch({type: Actions.SetPlayers, payload: []})
   }
 
+  const nextHand = () => {
+    dispatch({type: Actions.SetCurHand, payload: (curHand + 1) % nPlayers})
+  }
+
   return {
+    curHand,
     isGameOver,
     nPlayers,
     players,
@@ -35,6 +42,7 @@ const useGame = () => {
     beginGame,
     endGame,
     newGame,
+    nextHand,
   }
 }
 

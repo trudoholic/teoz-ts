@@ -13,6 +13,7 @@ export const MainContainer = styled.div`
 
 const GameMain = () => {
   const {
+    curHand,
     nPlayers,
     players,
   } = useGame()
@@ -28,7 +29,7 @@ const GameMain = () => {
 
   return (
     <>
-      <h2>Game Main {nPlayers}</h2>
+      <h2>Game Main {curHand} / {nPlayers}</h2>
 
       <MainContainer>
 

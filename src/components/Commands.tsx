@@ -18,13 +18,20 @@ export const StyledCommands = styled.div`
 const Commands = () => {
   const {
     endGame,
+    nextHand,
   } = useGame()
 
   return (
     <StyledCommands>
+
+      <button onClick={nextHand}>
+        Next Hand
+      </button>
+
       <button onClick={endGame}>
         End Game
       </button>
+
     </StyledCommands>
   )
 }
