@@ -1,7 +1,8 @@
-// import {cards, ICard} from "../data/cards"
+import { ICard } from "../data/cards"
 import { IPlayer } from "../data/players"
 
 export interface IState {
+  cards: ICard[]
   curHand: number
   isGameOver: boolean
   nPlayers: number
@@ -9,6 +10,7 @@ export interface IState {
 }
 
 export const defaultState: IState = {
+  cards: [],
   curHand: 0,
   isGameOver: true,
   nPlayers: 0,

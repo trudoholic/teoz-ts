@@ -7,7 +7,7 @@ export interface IPlayer {
 
 export const commonId = "0"
 
-export const rawPlayers: IPlayer[] = [
+export const playerList: IPlayer[] = [
   {
     id: "1",
     name: 'Anna',

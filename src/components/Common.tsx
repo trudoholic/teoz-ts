@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import {green} from "../styles/colors"
-import {zones} from "../data/zones"
+import {commonZones} from "../data/zones"
 import Zone from "./Zone"
 
 const StyledCommon = styled.div`
@@ -17,11 +17,10 @@ const Common = () => {
   return (
     <StyledCommon>
       {
-        zones.filter(zone => zone.common)
-          .map((zone) =>
+        commonZones.map((zone) =>
           <Zone
-            {...zone}
             key={zone.id}
+            {...zone}
           />)
       }
     </StyledCommon>

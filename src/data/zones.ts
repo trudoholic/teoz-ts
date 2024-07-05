@@ -1,6 +1,5 @@
 export interface IZone {
   id: string
-  common: boolean
 }
 
 export const Zone = {
@@ -10,9 +9,12 @@ export const Zone = {
   Keep: "Keep",
 } as const
 
-export const zones: IZone[] = [
-  { id: Zone.DiscardPile, common: true },
-  { id: Zone.DrawPile, common: true },
-  { id: Zone.Hand, common: false },
-  { id: Zone.Keep, common: false },
+export const commonZones: IZone[] = [
+  { id: Zone.DiscardPile },
+  { id: Zone.DrawPile },
 ]
+
+// export const zones: IZone[] = [
+//   { id: Zone.Hand },
+//   { id: Zone.Keep },
+// ]

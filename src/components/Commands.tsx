@@ -19,6 +19,7 @@ const Commands = () => {
   const {
     endGame,
     nextHand,
+    moveCard,
   } = useGame()
 
   return (
@@ -30,6 +31,10 @@ const Commands = () => {
 
       <button onClick={endGame}>
         End Game
+      </button>
+
+      <button onClick={moveCard}>
+        Move Card
       </button>
 
     </StyledCommands>

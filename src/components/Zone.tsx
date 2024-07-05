@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import {grey} from "../styles/colors"
+import useGame from "../hooks/useGame"
 import {IZone} from "../data/zones"
 import Card from "./Card"
 
@@ -12,6 +13,10 @@ const CardContainer = styled.div`
 `
 
 const Zone = ({id}: IZone) => {
+  const {
+    cards,
+  } = useGame()
+
   const styles = {
     box: {
       maxHeight: "75vh",
@@ -26,18 +31,19 @@ const Zone = ({id}: IZone) => {
     },
   };
 
-  const cards = [{ id: 1 }, { id: 2 }, { id: 3 }]
+  // const cards = [{ id: 1 }, { id: 2 }, { id: 3 }]
+  const zoneCards = cards.filter(card => card.idZone === id)
 
   return (
     <>
       <div style={styles.box}>
         {
-          cards.length ?
+          zoneCards.length ?
             <details open>
-              <summary>{`${id} [${cards.length}]`}</summary>
+              <summary>{`${id} [${zoneCards.length}]`}</summary>
 
               <CardContainer>
-                {cards.map((card) => (
+                {zoneCards.map((card) => (
                   <Card {...card} key={card.id}/>
                 ))}
               </CardContainer>
