@@ -1,9 +1,10 @@
 import styled from "styled-components"
 import useGame from "../hooks/useGame"
 import Commands from "./Commands"
+import Common from "./Common"
 import Player from "./Player"
 
-export const MainContainer = styled.div`
+const MainContainer = styled.div`
   //background: olive;
   //border: 1px solid #ff0;
   display: flex;
@@ -19,28 +20,13 @@ const GameMain = () => {
     players,
   } = useGame()
 
-  const divStyle = {
-    border: "1px solid silver",
-    color: "silver",
-    flex: "1 0 0",
-    fontSize: "1.6rem",
-    margin: "0.2rem",
-    padding: "0.8rem 1.6rem",
-  }
-
   return (
     <>
       <h2>Game Main {curHand} / {nPlayers}</h2>
-
       <MainContainer>
-
-        <div style={divStyle}>
-          Common
-        </div>
-
+        <Common/>
         {players.map((p, i) => <Player key={p.id} idx={i} />)}
         <Commands/>
-
       </MainContainer>
     </>
   )
