@@ -1,5 +1,7 @@
 import styled from "styled-components"
 import {green, grey, lime, orange} from "../styles/colors"
+import useGame from "../hooks/useGame"
+import {ICard} from "../data/cards"
 
 interface ICardProps {
   $active: boolean;
@@ -40,20 +42,25 @@ export const FlexRow = styled.div<IFlexRowProps>`
   padding: ${({$paddingX}) => `0 ${$paddingX}px`};
 `
 
-const Card = (card: { id: number }) => { //card: ICard
+const Card = (card: ICard) => {
   const {
     id,
   } = card
 
-  const cardActive = false
+  const {
+    idActive,
+    setIdActive,
+  } = useGame()
+
   const cardTarget = false
   const cardDisabled = false
 
   return (
     <StyledCard
-      $active={cardActive}
+      $active={id === idActive}
       $target={cardTarget}
       $disabled={cardDisabled}
+      {...(!cardDisabled && { "onClick": () => setIdActive(id) })}
     >
       <FlexRow $paddingX={0}>
         <span>{`${id}`}</span>

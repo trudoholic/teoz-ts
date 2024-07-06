@@ -17,9 +17,11 @@ export const StyledCommands = styled.div`
 
 const Commands = () => {
   const {
+    idActive,
     endGame,
     nextHand,
     moveCard,
+    setIdActive,
   } = useGame()
 
   return (
@@ -33,9 +35,18 @@ const Commands = () => {
         End Game
       </button>
 
-      <button onClick={moveCard}>
-        Move Card
-      </button>
+      {
+        idActive?
+          <>
+            <button onClick={() => setIdActive("")}>
+              Undo
+            </button>
+
+            <button onClick={moveCard}>
+              Move Card
+            </button>
+          </>: null
+      }
 
     </StyledCommands>
   )

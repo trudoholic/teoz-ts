@@ -11,6 +11,7 @@ const useGame = () => {
   const {
     cards,
     curHand,
+    idActive,
     isGameOver,
     nPlayers,
     players,
@@ -37,8 +38,6 @@ const useGame = () => {
       idZone: Zone.DrawPile,
     }))
 
-  console.log(getCards)
-
   const beginGame = (n: number) => {
     dispatch({type: Actions.SetCards, payload: getCards()})
     dispatch({type: Actions.SetCurHand, payload: Math.floor(Math.random() * n)})
@@ -59,17 +58,25 @@ const useGame = () => {
   }
 
   const moveCard = () => {
-    const _card = cards.find(card => card.idZone === Zone.DrawPile)
-    if (_card) {
-      dispatch({type: Actions.SetCards, payload: cards.map(
-        card => card === _card? {...card, idZone: Zone.DiscardPile}: card
-      )})
-    }
+    const newCards = [...cards.filter(card => card.id !== idActive),
+      {
+        id: idActive,
+        idPlayer: commonId,
+        idZone: Zone.DiscardPile,
+      }
+    ]
+    dispatch({type: Actions.SetCards, payload: newCards})
+    dispatch({type: Actions.SetIdActive, payload: ""})
+  }
+
+  const setIdActive = (id: string) => {
+    dispatch({type: Actions.SetIdActive, payload: id})
   }
 
   return {
     cards,
     curHand,
+    idActive,
     isGameOver,
     nPlayers,
     players,
@@ -79,6 +86,7 @@ const useGame = () => {
     newGame,
     nextHand,
     moveCard,
+    setIdActive,
   }
 }
 

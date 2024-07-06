@@ -31,7 +31,6 @@ const Zone = ({id}: IZone) => {
     },
   };
 
-  // const cards = [{ id: 1 }, { id: 2 }, { id: 3 }]
   const zoneCards = cards.filter(card => card.idZone === id)
 
   return (
