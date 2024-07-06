@@ -20,7 +20,7 @@ const Commands = () => {
     idActive,
     endGame,
     nextHand,
-    moveCard,
+    dropCard,
     setIdActive,
   } = useGame()
 
@@ -42,8 +42,8 @@ const Commands = () => {
               Undo
             </button>
 
-            <button onClick={moveCard}>
-              Move Card
+            <button onClick={dropCard}>
+              Drop Card
             </button>
           </>: null
       }

@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import {green} from "../styles/colors"
+import {commonId} from "../data/players"
 import {commonZones} from "../data/zones"
 import Zone from "./Zone"
 
@@ -20,6 +21,7 @@ const Common = () => {
         commonZones.map((zone) =>
           <Zone
             key={zone.id}
+            idPlayer={commonId}
             {...zone}
           />)
       }

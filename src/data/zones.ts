@@ -1,5 +1,6 @@
 export interface IZone {
   id: string
+  idPlayer?: string
 }
 
 export const Zone = {
@@ -14,7 +15,7 @@ export const commonZones: IZone[] = [
   { id: Zone.DrawPile },
 ]
 
-// export const zones: IZone[] = [
-//   { id: Zone.Hand },
-//   { id: Zone.Keep },
-// ]
+export const playerZones: IZone[] = [
+  { id: Zone.Hand },
+  { id: Zone.Keep },
+]

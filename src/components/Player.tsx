@@ -3,8 +3,8 @@ import {grey, lime} from "../styles/colors"
 import useGame from "../hooks/useGame"
 
 import {IPlayer} from "../data/players"
-// import {zones} from "../data/zones"
-// import Zone from "./Zone"
+import {playerZones} from "../data/zones"
+import Zone from "./Zone"
 
 interface IPlayerInfoProps {
   $hand: boolean;
@@ -48,14 +48,6 @@ const Player = ({idx}: IPlayerProps) => {
     players,
   } = useGame()
 
-  const divStyle = {
-    border: "1px solid teal",
-    color: "silver",
-    // flex: "1 0 0",
-    // fontSize: "1.6rem",
-    // margin: "0.2rem",
-    // padding: "0.8rem 1.6rem",
-  }
   const curTurn = -1
   const player: IPlayer = players[idx]
 
@@ -69,17 +61,12 @@ const Player = ({idx}: IPlayerProps) => {
         {`${player.name} (${idx})`}
       </StyledPlayerInfo>
       {
-        // zones.map((zone) =>
-        //   <Zone
-        //     {...zone}
-        //     key={zone.id}
-        //     cards={getZone(zone.id, player.id)}
-        //   />)
-
-        [1,2,3].map((z) =>
-          <div key={z} style={divStyle}>
-            {z}
-          </div>)
+        playerZones.map((zone) =>
+          <Zone
+            key={zone.id}
+            idPlayer={player.id}
+            {...zone}
+          />)
       }
     </StyledPlayer>
   )

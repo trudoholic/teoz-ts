@@ -1,10 +1,10 @@
 import useAppContext from "../context/useAppContext"
-import { Actions } from "../context/reducer"
-import { IState } from "../context/state"
+import {Actions } from "../context/reducer"
+import {IState } from "../context/state"
 
-import { cardList, ICard } from "../data/cards"
-import { commonId, playerList } from "../data/players"
-import { Zone } from "../data/zones"
+import {dealCards} from "../data/cards"
+import {commonId, getPlayers} from "../data/players"
+import {Zone} from "../data/zones"
 
 const useGame = () => {
   const { state, dispatch } = useAppContext()
@@ -17,30 +17,10 @@ const useGame = () => {
     players,
   } = state as IState
 
-  const getPlayers = (n: number) => playerList.slice(0, n)
-
-  const shuffle = (n: number, debug = false) => {
-    const src = [...Array(n).keys()]
-    if (debug) return src
-
-    const result: number[] = []
-    while (src.length) {
-      const rnd = Math.floor(Math.random() * src.length)
-      result.push(src.splice(rnd, 1)[0])
-    }
-    return result
-  }
-
-  const getCards = (): ICard[] => shuffle(cardList.length)
-    .map((i) => ({
-      id: cardList.at(i).id,
-      idPlayer: commonId,
-      idZone: Zone.DrawPile,
-    }))
-
   const beginGame = (n: number) => {
-    dispatch({type: Actions.SetCards, payload: getCards()})
-    dispatch({type: Actions.SetCurHand, payload: Math.floor(Math.random() * n)})
+    const eldestHand = Math.floor(Math.random() * n)
+    dispatch({type: Actions.SetCards, payload: dealCards(3, n, eldestHand)})
+    dispatch({type: Actions.SetCurHand, payload: eldestHand})
     dispatch({type: Actions.SetGameOver, payload: false})
     dispatch({type: Actions.SetPlayers, payload: getPlayers(n)})
   }
@@ -57,7 +37,7 @@ const useGame = () => {
     dispatch({type: Actions.SetCurHand, payload: (curHand + 1) % nPlayers})
   }
 
-  const moveCard = () => {
+  const dropCard = () => {
     const newCards = [...cards.filter(card => card.id !== idActive),
       {
         id: idActive,
@@ -85,7 +65,7 @@ const useGame = () => {
     endGame,
     newGame,
     nextHand,
-    moveCard,
+    dropCard,
     setIdActive,
   }
 }

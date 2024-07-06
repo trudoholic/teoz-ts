@@ -33,3 +33,5 @@ export const playerList: IPlayer[] = [
     // pass: false
   },
 ]
+
+export const getPlayers = (n: number) => playerList.slice(0, n)

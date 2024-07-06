@@ -12,7 +12,7 @@ const CardContainer = styled.div`
   justify-content: center;
 `
 
-const Zone = ({id}: IZone) => {
+const Zone = ({id, idPlayer}: IZone) => {
   const {
     cards,
   } = useGame()
@@ -31,7 +31,7 @@ const Zone = ({id}: IZone) => {
     },
   };
 
-  const zoneCards = cards.filter(card => card.idZone === id)
+  const zoneCards = cards.filter(card => card.idZone === id && card.idPlayer === idPlayer)
 
   return (
     <>
@@ -39,7 +39,7 @@ const Zone = ({id}: IZone) => {
         {
           zoneCards.length ?
             <details open>
-              <summary>{`${id} [${zoneCards.length}]`}</summary>
+              <summary>{`${id} ${idPlayer} [${zoneCards.length}]`}</summary>
 
               <CardContainer>
                 {zoneCards.map((card) => (
@@ -48,7 +48,7 @@ const Zone = ({id}: IZone) => {
               </CardContainer>
 
             </details>
-            : <div style={styles.box0}>{`${id}`}</div>
+            : <div style={styles.box0}>{`${id} ${idPlayer}`}</div>
         }
       </div>
     </>
