@@ -61,6 +61,7 @@ const Pyramid = ({id, idPlayer}: IZone) => {
             </Tier>
           ))
         }
+        ATK: {pyramid.atk} - DEF: {pyramid.def} - LVL: {pyramid.lvl} {pyramid.status? "*": ""}
       </div>
     </>
   )
