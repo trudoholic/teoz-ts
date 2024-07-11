@@ -1,8 +1,8 @@
 import useAppContext from "../context/useAppContext"
-import {Actions } from "../context/reducer"
-import {IState } from "../context/state"
+import {Actions} from "../context/reducer"
+import {IState} from "../context/state"
 
-import {dealCards} from "../data/cards"
+import {dealCards, ICard} from "../data/cards"
 import {commonId, getPlayers} from "../data/players"
 import {tierZones, Zone} from "../data/zones"
 
@@ -11,6 +11,7 @@ const useGame = () => {
   const {
     cards,
     curHand,
+    curTurn,
     idActive,
     isGameOver,
     nPlayers,
@@ -87,14 +88,18 @@ const useGame = () => {
     dispatch({type: Actions.SetIdActive, payload: ""})
   }
 
+  // const drawCard = () => {
+  // }
+
   const dropCard = () => {
     moveCard(Zone.DiscardPile)
   }
 
-  const curPlayer = () => { return  players.at(curHand) }
+  // const curPlayer = () => { return players.at(curHand) }
+  const curPlayer = () => { return players.at(curTurn) }
 
   const playTier = (tier: number) => {
-    const playerId = players.at(curHand).id
+    const playerId = curPlayer().id
     moveCard(tierZones.at(tier).id, playerId)
     dispatch({type: Actions.SetPlayer, payload: {
       id: playerId,
@@ -106,27 +111,36 @@ const useGame = () => {
     const card = cards.find(card => card.id === idActive)
     const tier = tierZones.findIndex(zone => zone.id === card.idZone)
     if (tier > 0) {
-      moveCard(tierZones.at(tier - 1).id, players.at(curHand).id)
+      moveCard(tierZones.at(tier - 1).id, curPlayer().id)
     }
+  }
+
+  const isValidCard = (card: ICard): boolean => {
+    return (
+      card.idPlayer === curPlayer().id &&
+      (card.idZone === Zone.Hand && curPlayer().canPlay)
+    )
   }
 
   return {
     cards,
     curHand,
+    curTurn,
     idActive,
     isGameOver,
     nPlayers,
     players,
 
     beginGame,
-    endGame,
-    newGame,
     curPlayer,
-    nextHand,
     dropCard,
-    setIdActive,
+    endGame,
     getPyramid,
+    isValidCard,
+    newGame,
+    nextHand,
     playTier,
+    setIdActive,
     tierDown,
   }
 }

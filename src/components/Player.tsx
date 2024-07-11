@@ -46,10 +46,10 @@ interface IPlayerProps {
 const Player = ({idx}: IPlayerProps) => {
   const {
     curHand,
+    curTurn,
     players,
   } = useGame()
 
-  const curTurn = -1
   const player: IPlayer = players[idx]
 
   return (

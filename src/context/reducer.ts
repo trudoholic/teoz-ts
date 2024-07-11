@@ -27,7 +27,7 @@ export const reducer = (state: IState, action: TAction): IState => {
     }
 
     case Actions.SetCurHand: {
-      return { ...state, curHand: action.payload }
+      return { ...state, curHand: action.payload, curTurn: action.payload }
     }
 
     case Actions.SetIdActive: {

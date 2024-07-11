@@ -71,7 +71,7 @@ const Commands = () => {
           </>: <>{/*NO ACTIVE CARD*/}
 
             <button onClick={nextHand}>
-              Next Hand
+              Next
             </button>
 
             <button onClick={endGame}>

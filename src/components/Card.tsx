@@ -50,11 +50,12 @@ const Card = (card: ICard) => {
 
   const {
     idActive,
+    isValidCard,
     setIdActive,
   } = useGame()
 
   const cardTarget = false
-  const cardDisabled = false
+  const cardDisabled = !isValidCard(card)
 
   return (
     <StyledCard
