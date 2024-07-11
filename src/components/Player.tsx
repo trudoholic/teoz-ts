@@ -4,6 +4,7 @@ import useGame from "../hooks/useGame"
 
 import {IPlayer} from "../data/players"
 import {playerZones} from "../data/zones"
+import Pyramid from "./Pyramid"
 import Zone from "./Zone"
 
 interface IPlayerInfoProps {
@@ -60,6 +61,9 @@ const Player = ({idx}: IPlayerProps) => {
       >
         {`${player.name} (${idx})`}
       </StyledPlayerInfo>
+
+      <Pyramid id={player.id}/>
+
       {
         playerZones.map((zone) =>
           <Zone

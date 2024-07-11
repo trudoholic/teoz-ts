@@ -53,6 +53,27 @@ const useGame = () => {
     dispatch({type: Actions.SetIdActive, payload: id})
   }
 
+  const getPyramid = () => {
+    const cardList = [ { id: "1" }, { id: "2" }, { id: "3" }, { id: "4" } ]
+    const rnd = n => Math.floor(Math.random() * (n + 1))
+
+    const tiers = [
+      cardList.slice(0, rnd(4)),
+      cardList.slice(0, rnd(3)),
+      cardList.slice(0, rnd(2)),
+      cardList.slice(0, rnd(1)),
+    ]
+
+    const size = (i: number) => Math.min((4 - i), i? tiers.at(i - 1).length: 4)
+    const status = (i: number) => +(tiers.at(i).length < size(i)? -1: tiers.at(i).length > size(i)? 1: 0)
+    const statuses = tiers.map((_, i) => status(i))
+
+    return {
+      statuses,
+      tiers,
+    }
+  }
+
   return {
     cards,
     curHand,
@@ -67,6 +88,7 @@ const useGame = () => {
     nextHand,
     dropCard,
     setIdActive,
+    getPyramid,
   }
 }
 
