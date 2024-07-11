@@ -28,7 +28,8 @@ const Commands = () => {
     tierDown,
   } = useGame()
 
-  const pyramid = getPyramid(curPlayer().id)
+  const player = curPlayer()
+  const pyramid = getPyramid(player.id)
   const SIZE = pyramid.statuses.length
 
   return (
@@ -47,13 +48,15 @@ const Commands = () => {
 
             <hr/>
             {
-              pyramid.statuses.toReversed().map((status, idx) => (
-                status < 0? (
-                  <button key={idx} onClick={() => playTier(SIZE - 1 - idx)}>
-                    Tier {SIZE - idx}
-                  </button>
-                ): null
-              ))
+              player.canPlay? (
+                pyramid.statuses.toReversed().map((status, idx) => (
+                  status < 0? (
+                    <button key={idx} onClick={() => playTier(SIZE - 1 - idx)}>
+                      Tier {SIZE - idx}
+                    </button>
+                  ): null
+                ))
+              ): null
             }
 
             <hr/>
@@ -65,7 +68,7 @@ const Commands = () => {
               ): null
             }
 
-          </>: <>
+          </>: <>{/*NO ACTIVE CARD*/}
 
             <button onClick={nextHand}>
               Next Hand

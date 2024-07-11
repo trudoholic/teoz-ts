@@ -1,7 +1,7 @@
 export interface IPlayer {
   id: string
   name: string
-  // pass: boolean
+  canPlay: boolean
   // value: number
 }
 
@@ -12,25 +12,25 @@ export const playerList: IPlayer[] = [
     id: "1",
     name: 'Anna',
     // value: 0,
-    // pass: false
+    canPlay: true,
   },
   {
     id: "2",
     name: 'Beth',
     // value: 0,
-    // pass: false
+    canPlay: true,
   },
   {
     id: "3",
     name: 'Ciri',
     // value: 0,
-    // pass: false
+    canPlay: true,
   },
   {
     id: "4",
     name: 'Dana',
     // value: 0,
-    // pass: false
+    canPlay: true,
   },
 ]
 

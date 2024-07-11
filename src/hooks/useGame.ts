@@ -34,6 +34,11 @@ const useGame = () => {
   }
 
   const nextHand = () => {
+    const playerId = players.at(curHand).id
+    dispatch({type: Actions.SetPlayer, payload: {
+      id: playerId,
+      canPlay: true,
+    }})
     dispatch({type: Actions.SetCurHand, payload: (curHand + 1) % nPlayers})
   }
 
@@ -89,7 +94,12 @@ const useGame = () => {
   const curPlayer = () => { return  players.at(curHand) }
 
   const playTier = (tier: number) => {
-    moveCard(tierZones.at(tier).id, players.at(curHand).id)
+    const playerId = players.at(curHand).id
+    moveCard(tierZones.at(tier).id, playerId)
+    dispatch({type: Actions.SetPlayer, payload: {
+      id: playerId,
+      canPlay: false,
+    }})
   }
 
   const tierDown = () => {

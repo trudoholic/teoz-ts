@@ -7,6 +7,7 @@ export enum Actions {
   SetCurHand,
   SetIdActive,
   SetGameOver,
+  SetPlayer,
   SetPlayers,
 }
 
@@ -15,6 +16,7 @@ export type TAction =
   | { type: Actions.SetCurHand, payload: number }
   | { type: Actions.SetIdActive, payload: string }
   | { type: Actions.SetGameOver, payload: boolean }
+  | { type: Actions.SetPlayer, payload: Partial<IPlayer> }
   | { type: Actions.SetPlayers, payload: IPlayer[] }
 
 export const reducer = (state: IState, action: TAction): IState => {
@@ -34,6 +36,14 @@ export const reducer = (state: IState, action: TAction): IState => {
 
     case Actions.SetGameOver: {
       return { ...state, isGameOver: action.payload }
+    }
+
+    case Actions.SetPlayer: {
+      return { ...state,
+        players: [...state.players.map(player => (
+          player.id === action.payload.id? {...player, ...action.payload}: player
+        ))],
+      }
     }
 
     case Actions.SetPlayers: {
