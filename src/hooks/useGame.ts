@@ -92,6 +92,14 @@ const useGame = () => {
     moveCard(tierZones.at(tier).id, players.at(curHand).id)
   }
 
+  const tierDown = () => {
+    const card = cards.find(card => card.id === idActive)
+    const tier = tierZones.findIndex(zone => zone.id === card.idZone)
+    if (tier > 0) {
+      moveCard(tierZones.at(tier - 1).id, players.at(curHand).id)
+    }
+  }
+
   return {
     cards,
     curHand,
@@ -109,6 +117,7 @@ const useGame = () => {
     setIdActive,
     getPyramid,
     playTier,
+    tierDown,
   }
 }
 

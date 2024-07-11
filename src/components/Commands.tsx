@@ -25,10 +25,11 @@ const Commands = () => {
     getPyramid,
     setIdActive,
     playTier,
+    tierDown,
   } = useGame()
 
-  const statuses = getPyramid(curPlayer().id).statuses
-  const SIZE = statuses.length
+  const pyramid = getPyramid(curPlayer().id)
+  const SIZE = pyramid.statuses.length
 
   return (
     <StyledCommands>
@@ -45,15 +46,23 @@ const Commands = () => {
             </button>
 
             <hr/>
-
             {
-              statuses.toReversed().map((status, idx) => (
+              pyramid.statuses.toReversed().map((status, idx) => (
                 status < 0? (
                   <button key={idx} onClick={() => playTier(SIZE - 1 - idx)}>
                     Tier {SIZE - idx}
                   </button>
                 ): null
               ))
+            }
+
+            <hr/>
+            {
+              pyramid.status? (
+                <button onClick={tierDown}>
+                  Fix Tier
+                </button>
+              ): null
             }
 
           </>: <>
