@@ -20,13 +20,14 @@ const Tier = styled.div<ITierProps>`
   height: 3.4rem;
 `
 
-const Pyramid = ({id, idPlayer}: IZone) => {
+interface IProps {
+  idPlayer: string
+}
+
+const Pyramid = ({idPlayer}: IProps) => {
   const {
-    cards,
     getPyramid,
   } = useGame()
-
-  console.log(id, idPlayer, cards)
 
   const styles = {
     box: {
@@ -42,7 +43,7 @@ const Pyramid = ({id, idPlayer}: IZone) => {
     },
   };
 
-  const pyramid = getPyramid()
+  const pyramid = getPyramid(idPlayer ?? "")
 
   return (
     <>

@@ -62,7 +62,7 @@ const Player = ({idx}: IPlayerProps) => {
         {`${player.name} (${idx})`}
       </StyledPlayerInfo>
 
-      <Pyramid id={player.id}/>
+      <Pyramid idPlayer={player.id}/>
 
       {
         playerZones.map((zone) =>

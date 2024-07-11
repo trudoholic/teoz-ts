@@ -4,7 +4,7 @@ import {IState } from "../context/state"
 
 import {dealCards} from "../data/cards"
 import {commonId, getPlayers} from "../data/players"
-import {Zone} from "../data/zones"
+import {tierZones, Zone} from "../data/zones"
 
 const useGame = () => {
   const { state, dispatch } = useAppContext()
@@ -37,31 +37,20 @@ const useGame = () => {
     dispatch({type: Actions.SetCurHand, payload: (curHand + 1) % nPlayers})
   }
 
-  const dropCard = () => {
-    const newCards = [...cards.filter(card => card.id !== idActive),
-      {
-        id: idActive,
-        idPlayer: commonId,
-        idZone: Zone.DiscardPile,
-      }
-    ]
-    dispatch({type: Actions.SetCards, payload: newCards})
-    dispatch({type: Actions.SetIdActive, payload: ""})
-  }
-
   const setIdActive = (id: string) => {
     dispatch({type: Actions.SetIdActive, payload: id})
   }
 
-  const getPyramid = () => {
-    const cardList = [ { id: "1" }, { id: "2" }, { id: "3" }, { id: "4" } ]
-    const rnd = n => Math.floor(Math.random() * (n + 1))
+  const getPyramid = (idPlayer: string) => {
+    const filteredCards = (tier: number) => cards.filter(card => (
+      card.idZone === tierZones.at(tier).id && card.idPlayer === idPlayer
+    ))
 
     const tiers = [
-      cardList.slice(0, rnd(4)),
-      cardList.slice(0, rnd(3)),
-      cardList.slice(0, rnd(2)),
-      cardList.slice(0, rnd(1)),
+      filteredCards(0),
+      filteredCards(1),
+      filteredCards(2),
+      filteredCards(3),
     ]
 
     const SIZE = tiers.length
@@ -81,6 +70,28 @@ const useGame = () => {
     }
   }
 
+  const moveCard = (idZone: string, idPlayer: string = commonId) => {
+    const newCards = [...cards.filter(card => card.id !== idActive),
+      {
+        id: idActive,
+        idPlayer: idPlayer,
+        idZone: idZone,
+      }
+    ]
+    dispatch({type: Actions.SetCards, payload: newCards})
+    dispatch({type: Actions.SetIdActive, payload: ""})
+  }
+
+  const dropCard = () => {
+    moveCard(Zone.DiscardPile)
+  }
+
+  const curPlayer = () => { return  players.at(curHand) }
+
+  const playTier = (tier: number) => {
+    moveCard(tierZones.at(tier).id, players.at(curHand).id)
+  }
+
   return {
     cards,
     curHand,
@@ -92,10 +103,12 @@ const useGame = () => {
     beginGame,
     endGame,
     newGame,
+    curPlayer,
     nextHand,
     dropCard,
     setIdActive,
     getPyramid,
+    playTier,
   }
 }
 

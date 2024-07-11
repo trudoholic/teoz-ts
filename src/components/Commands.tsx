@@ -18,26 +18,24 @@ export const StyledCommands = styled.div`
 const Commands = () => {
   const {
     idActive,
+    curPlayer,
     endGame,
     nextHand,
     dropCard,
+    getPyramid,
     setIdActive,
+    playTier,
   } = useGame()
+
+  const statuses = getPyramid(curPlayer().id).statuses
+  const SIZE = statuses.length
 
   return (
     <StyledCommands>
-
-      <button onClick={nextHand}>
-        Next Hand
-      </button>
-
-      <button onClick={endGame}>
-        End Game
-      </button>
-
       {
         idActive?
           <>
+
             <button onClick={() => setIdActive("")}>
               Undo
             </button>
@@ -45,9 +43,31 @@ const Commands = () => {
             <button onClick={dropCard}>
               Drop Card
             </button>
-          </>: null
-      }
 
+            <hr/>
+
+            {
+              statuses.toReversed().map((status, idx) => (
+                status < 0? (
+                  <button key={idx} onClick={() => playTier(SIZE - 1 - idx)}>
+                    Tier {SIZE - idx}
+                  </button>
+                ): null
+              ))
+            }
+
+          </>: <>
+
+            <button onClick={nextHand}>
+              Next Hand
+            </button>
+
+            <button onClick={endGame}>
+              End Game
+            </button>
+
+          </>
+      }
     </StyledCommands>
   )
 }
