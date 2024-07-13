@@ -43,8 +43,7 @@ const useGame = () => {
     dispatch({type: Actions.SetCurHand, payload: (curHand + 1) % nPlayers})
   }
 
-  const formatId = (n: number) => `00${n + 1}`.slice(-3)
-
+  // const formatId = (n: number) => `00${n + 1}`.slice(-3)
   const isActive = (id: number) => { return idActive === id }
 
   const setIdActive = (id: number = -1) => {
@@ -140,7 +139,6 @@ const useGame = () => {
     curPlayer,
     dropCard,
     endGame,
-    formatId,
     getPyramid,
     isActive,
     isValidCard,
