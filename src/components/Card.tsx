@@ -49,7 +49,8 @@ const Card = (card: ICard) => {
   } = card
 
   const {
-    idActive,
+    formatId,
+    isActive,
     isValidCard,
     setIdActive,
   } = useGame()
@@ -59,13 +60,13 @@ const Card = (card: ICard) => {
 
   return (
     <StyledCard
-      $active={id === idActive}
+      $active={isActive(id)}
       $target={cardTarget}
       $disabled={cardDisabled}
       {...(!cardDisabled && { "onClick": () => setIdActive(id) })}
     >
       <FlexRow $paddingX={0}>
-        <span>{`${id}`}</span>
+        <span>{formatId(id)}</span>
       </FlexRow>
     </StyledCard>
   )

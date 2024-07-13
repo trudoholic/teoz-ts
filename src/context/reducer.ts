@@ -14,7 +14,7 @@ export enum Actions {
 export type TAction =
   | { type: Actions.SetCards, payload: ICard[] }
   | { type: Actions.SetCurHand, payload: number }
-  | { type: Actions.SetIdActive, payload: string }
+  | { type: Actions.SetIdActive, payload: number }
   | { type: Actions.SetGameOver, payload: boolean }
   | { type: Actions.SetPlayer, payload: Partial<IPlayer> }
   | { type: Actions.SetPlayers, payload: IPlayer[] }

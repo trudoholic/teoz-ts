@@ -35,10 +35,10 @@ const Commands = () => {
   return (
     <StyledCommands>
       {
-        idActive?
+        idActive >= 0 ?
           <>
 
-            <button onClick={() => setIdActive("")}>
+            <button onClick={() => setIdActive()}>
               Undo
             </button>
 

@@ -1,25 +1,44 @@
 import {commonId} from "./players";
 import {Zone} from "./zones";
 
+export interface ICardData  {
+  cardType: string
+  atk?: number
+  def?: number
+  lvl?: number
+  name: string
+  suit?: string
+  rank?: string
+}
+
 export interface ICard  {
-  id: string
+  id: number
   idPlayer: string
   idZone: string
 }
 
-// export const cardList = [
-//   { id: "1" },
-//   { id: "2" },
-//   { id: "3" },
-//   { id: "4" },
-//   { id: "5" },
-// ]
+const CardType = {
+  Art: "Art",
+  Group: "Group",
+  Unit: "Unit",
+} as const
 
-export const cardList = [...Array(100).keys()]
-  .map(i => ({ id: `${i + 1}` }))
+const cardList: ICardData[] = [
+  { cardType: CardType.Art, name: "Art #1" },
+  { cardType: CardType.Art, name: "Art #2" },
+  { cardType: CardType.Art, name: "Art #3" },
+  { cardType: CardType.Group, name: "Group #1" },
+  { cardType: CardType.Group, name: "Group #2" },
+  { cardType: CardType.Group, name: "Group #3" },
+  { cardType: CardType.Unit, name: "Unit #1" },
+  { cardType: CardType.Unit, name: "Unit #2" },
+  { cardType: CardType.Unit, name: "Unit #3" },
+] as const
 
-const shuffle = (n: number, debug = false) => {
-  const src = [...Array(n).keys()]
+export const cardData = (i: number) => cardList.at(i) as const
+
+const shuffle = (debug = false) => {
+  const src = [...cardList.keys()]
   if (debug) return src
 
   const result: number[] = []
@@ -30,9 +49,9 @@ const shuffle = (n: number, debug = false) => {
   return result
 }
 
-const getCards = (): ICard[] => shuffle(cardList.length, true)
+const getCards = (): ICard[] => shuffle(true)
   .map((n) => ({
-    id: cardList.at(n).id,
+    id: n,
     idPlayer: commonId,
     idZone: Zone.DrawPile,
   }))

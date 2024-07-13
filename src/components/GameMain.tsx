@@ -16,13 +16,18 @@ const MainContainer = styled.div`
 const GameMain = () => {
   const {
     curHand,
+    idActive,
     nPlayers,
     players,
+
+    cardData,
   } = useGame()
+
+  const nameActive = cardData(idActive)?.name ?? ""
 
   return (
     <>
-      <h2>Game Main {curHand} / {nPlayers}</h2>
+      <h2>Game Main [{curHand} / {nPlayers}] {nameActive}</h2>
       <MainContainer>
         <Common/>
         {players.map((p, i) => <Player key={p.id} idx={i} />)}

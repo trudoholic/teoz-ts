@@ -2,7 +2,7 @@ import useAppContext from "../context/useAppContext"
 import {Actions} from "../context/reducer"
 import {IState} from "../context/state"
 
-import {dealCards, ICard} from "../data/cards"
+import {cardData, dealCards, ICard} from "../data/cards"
 import {commonId, getPlayers} from "../data/players"
 import {tierZones, Zone} from "../data/zones"
 
@@ -43,7 +43,11 @@ const useGame = () => {
     dispatch({type: Actions.SetCurHand, payload: (curHand + 1) % nPlayers})
   }
 
-  const setIdActive = (id: string) => {
+  const formatId = (n: number) => `00${n + 1}`.slice(-3)
+
+  const isActive = (id: number) => { return idActive === id }
+
+  const setIdActive = (id: number = -1) => {
     dispatch({type: Actions.SetIdActive, payload: id})
   }
 
@@ -77,15 +81,13 @@ const useGame = () => {
   }
 
   const moveCard = (idZone: string, idPlayer: string = commonId) => {
-    const newCards = [...cards.filter(card => card.id !== idActive),
-      {
-        id: idActive,
-        idPlayer: idPlayer,
-        idZone: idZone,
-      }
-    ]
+    const newCards = cards.map(card => isActive(card.id)? {
+      ...card,
+      idPlayer: idPlayer,
+      idZone: idZone,
+    }: card)
     dispatch({type: Actions.SetCards, payload: newCards})
-    dispatch({type: Actions.SetIdActive, payload: ""})
+    dispatch({type: Actions.SetIdActive, payload: -1})
   }
 
   // const drawCard = () => {
@@ -108,10 +110,12 @@ const useGame = () => {
   }
 
   const tierDown = () => {
-    const card = cards.find(card => card.id === idActive)
-    const tier = tierZones.findIndex(zone => zone.id === card.idZone)
-    if (tier > 0) {
-      moveCard(tierZones.at(tier - 1).id, curPlayer().id)
+    const activeCard = cards.find(card => isActive(card.id))
+    if (activeCard) {
+      const tier = tierZones.findIndex(zone => zone.id === activeCard.idZone)
+      if (tier > 0) {
+        moveCard(tierZones.at(tier - 1).id, curPlayer().id)
+      }
     }
   }
 
@@ -132,10 +136,13 @@ const useGame = () => {
     players,
 
     beginGame,
+    cardData,
     curPlayer,
     dropCard,
     endGame,
+    formatId,
     getPyramid,
+    isActive,
     isValidCard,
     newGame,
     nextHand,

@@ -5,7 +5,7 @@ export interface IState {
   cards: ICard[]
   curHand: number
   curTurn: number
-  idActive: string
+  idActive: number
   isGameOver: boolean
   nPlayers: number
   players: IPlayer[]
@@ -15,7 +15,7 @@ export const defaultState: IState = {
   cards: [],
   curHand: 0,
   curTurn: 0,
-  idActive: "",
+  idActive: -1,
   isGameOver: true,
   nPlayers: 0,
   players: [],
