@@ -1,50 +1,53 @@
 import styled from "styled-components"
-import {yellow, grey, lime, orange} from "../styles/colors"
+import {green, grey, orange} from "../styles/colors"
 import useGame from "../hooks/useGame"
-import {cardColor, cardData, ICard} from "../data/cards"
+import {cardColor, cardData, ICard, size} from "../data/cards"
 
 interface ICardProps {
-  $bColor: string;
   $active: boolean;
   $target: boolean;
   $disabled: boolean;
 }
 
 export const StyledCard = styled.div<ICardProps>`
-  background: ${({$bColor}) => $bColor};
-  border: ${
+  background: ${
     ({$disabled, $active, $target}) => $active ? (
-      `${3}px solid ${lime[300]}`
+      `${green[300]}`
     ) : $target ? (
-      `${3}px solid ${orange[300]}`
+      `${orange[300]}`
     ) : $disabled ? (
-      `${1}px solid ${grey[500]}`
+      `${grey[700]}`
     ) : (
-      `${1}px solid ${yellow[100]}`
+      `${green[900]}`
     )
   };
-  box-sizing: border-box;
-  color: ${({$disabled}) => $disabled ? grey[500]: yellow[100]};
+  border: 1px solid ${grey[500]};
   cursor: ${({$disabled}) => $disabled ? "not-allowed" : "pointer"};
-  font-family: monospace, monospace;
-  font-size: 1.6rem;
-  margin: 0.2rem;
-  padding: 0.2rem 0.5rem 0.4rem;
-  width: 5rem;
-  height: 3rem;
+  margin: ${`${size.margin}rem`};
+  width: ${`${size.width}rem`};
+  height: ${`${size.height}rem`};
 `
 
-interface IFlexRowProps {
-  $paddingX: number;
+interface ICircleProps {
+  $bgColor: string;
 }
 
-export const FlexRow = styled.div<IFlexRowProps>`
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  //justify-content: space-between;
-  padding: ${({$paddingX}) => `0 ${$paddingX}px`};
+export const StyledCircle = styled.div<ICircleProps>`
+  background: ${({$bgColor}) => $bgColor};
+  border-radius: 50%;
+  box-sizing: border-box;
+  position: relative;
+  left: ${`${(size.width - size.radius)/2}rem`};
+  top: ${`${(size.height - size.radius)/2}rem`};
+  width: ${`${size.radius}rem`};
+  height: ${`${size.radius}rem`};
+`
+
+export const StyledSpan = styled.div`
+  color: ${grey[300]};
+  font-family: monospace, monospace;
+  font-size: 1.6rem;
+  line-height: ${`${size.radius}rem`};
 `
 
 const Card = (card: ICard) => {
@@ -58,7 +61,7 @@ const Card = (card: ICard) => {
     setIdActive,
   } = useGame()
 
-  const bColor = cardColor(id)
+  const bgColor = cardColor(id)
   const data = cardData(id)
 
   const cardDisabled = !isValidCard(card)
@@ -66,15 +69,14 @@ const Card = (card: ICard) => {
 
   return (
     <StyledCard
-      $bColor={bColor}
       $active={isActive(id)}
       $target={cardTarget}
       $disabled={cardDisabled}
       {...(!cardDisabled && { "onClick": () => setIdActive(id) })}
     >
-      <FlexRow $paddingX={0}>
-        <span>{data.name}</span>
-      </FlexRow>
+      <StyledCircle $bgColor={bgColor}>
+        <StyledSpan>{data.name}</StyledSpan>
+      </StyledCircle>
     </StyledCard>
   )
 }

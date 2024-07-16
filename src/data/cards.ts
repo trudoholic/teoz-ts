@@ -18,6 +18,13 @@ export interface ICard  {
   idZone: string
 }
 
+export const size = {
+  width: 5.4,
+  height: 3.4,
+  radius: 3,
+  margin: 0.2,
+} as const
+
 const CardType = {
   Art: "Art",
   Group: "Group",
@@ -46,15 +53,15 @@ const cardList: ICardData[] = [
   { cardType: CardType.Unit, suit: Suit.Red, name: "UR" },
 ] as const
 
-export const cardData = (i: number) => cardList.at(i) as const
+export const cardData = (i: number) => cardList[i] as const
 export const cardColor = (i: number) => {
   const data = cardData(i)
   return CardType.Group === data.cardType? (
     {
-      [Suit.Amber]: brown[900],
-      [Suit.Blue]: blue[900],
-      [Suit.Green]: green[900],
-      [Suit.Red]: red[900],
+      [Suit.Amber]: brown[700],
+      [Suit.Blue]: blue[700],
+      [Suit.Green]: green[700],
+      [Suit.Red]: red[700],
     }[data.suit]
   ) : CardType.Unit === data.cardType? (
     {
