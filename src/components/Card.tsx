@@ -1,7 +1,9 @@
 import styled from "styled-components"
 import {green, grey, orange} from "../styles/colors"
 import useGame from "../hooks/useGame"
-import {cardColor, cardData, ICard, size} from "../data/cards"
+import {
+  cardColor, cardData, CardType, ICard, size, tableColor
+} from "../data/cards"
 
 interface ICardProps {
   $active: boolean;
@@ -16,9 +18,9 @@ export const StyledCard = styled.div<ICardProps>`
     ) : $target ? (
       `${orange[300]}`
     ) : $disabled ? (
-      `${grey[700]}`
+      tableColor
     ) : (
-      `${green[900]}`
+      `${green[800]}`
     )
   };
   border: 1px solid ${grey[500]};
@@ -35,6 +37,27 @@ interface ICircleProps {
 export const StyledCircle = styled.div<ICircleProps>`
   background: ${({$bgColor}) => $bgColor};
   border-radius: 50%;
+  box-sizing: border-box;
+  position: relative;
+  left: ${`${(size.width - size.radius)/2}rem`};
+  top: ${`${(size.height - size.radius)/2}rem`};
+  width: ${`${size.radius}rem`};
+  height: ${`${size.radius}rem`};
+`
+
+export const StyledRhombus = styled.div<ICircleProps>`
+  background: ${({$bgColor}) => $bgColor};
+  box-sizing: border-box;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  position: relative;
+  left: ${`${(size.width - size.radius)/2}rem`};
+  top: ${`${(size.height - size.radius)/2}rem`};
+  width: ${`${size.radius}rem`};
+  height: ${`${size.radius}rem`};
+`
+
+export const StyledSquare = styled.div<ICircleProps>`
+  background: ${({$bgColor}) => $bgColor};
   box-sizing: border-box;
   position: relative;
   left: ${`${(size.width - size.radius)/2}rem`};
@@ -74,9 +97,24 @@ const Card = (card: ICard) => {
       $disabled={cardDisabled}
       {...(!cardDisabled && { "onClick": () => setIdActive(id) })}
     >
-      <StyledCircle $bgColor={bgColor}>
-        <StyledSpan>{data.name}</StyledSpan>
-      </StyledCircle>
+      {
+        CardType.Art === data.cardType? (
+          <StyledRhombus $bgColor={bgColor}>
+            <StyledSpan>{data.name}</StyledSpan>
+          </StyledRhombus>
+        ):
+        CardType.Group === data.cardType? (
+          <StyledSquare $bgColor={bgColor}>
+            <StyledSpan>{data.name}</StyledSpan>
+          </StyledSquare>
+        ):
+        CardType.Unit === data.cardType? (
+          <StyledCircle $bgColor={bgColor}>
+            <StyledSpan>{data.name}</StyledSpan>
+          </StyledCircle>
+        ):
+        null
+      }
     </StyledCard>
   )
 }

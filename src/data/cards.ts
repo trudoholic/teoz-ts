@@ -1,6 +1,6 @@
 import {commonId} from "./players";
 import {Zone} from "./zones";
-import {blue, brown, green, purple, red} from "../styles/colors"
+import {blue, brown, green, pink, red} from "../styles/colors"
 
 export interface ICardData  {
   cardType: string
@@ -25,7 +25,7 @@ export const size = {
   margin: 0.2,
 } as const
 
-const CardType = {
+export const CardType = {
   Art: "Art",
   Group: "Group",
   Unit: "Unit",
@@ -40,42 +40,45 @@ const Suit = {
 } as const
 
 const cardList: ICardData[] = [
-  { cardType: CardType.Art, name: "A1" },
-  { cardType: CardType.Art, name: "A2" },
-  { cardType: CardType.Art, name: "A3" },
-  { cardType: CardType.Group, suit: Suit.Amber, name: "GA" },
-  { cardType: CardType.Group, suit: Suit.Blue, name: "GB" },
-  { cardType: CardType.Group, suit: Suit.Green, name: "GG" },
-  { cardType: CardType.Group, suit: Suit.Red, name: "GR" },
-  { cardType: CardType.Unit, suit: Suit.Amber, name: "UA" },
-  { cardType: CardType.Unit, suit: Suit.Blue, name: "UB" },
-  { cardType: CardType.Unit, suit: Suit.Green, name: "UG" },
-  { cardType: CardType.Unit, suit: Suit.Red, name: "UR" },
+  { cardType: CardType.Art, name: "1" },
+  { cardType: CardType.Art, name: "2" },
+  { cardType: CardType.Art, name: "3" },
+  { cardType: CardType.Group, suit: Suit.Amber, name: "1" },
+  { cardType: CardType.Group, suit: Suit.Blue, name: "2" },
+  { cardType: CardType.Group, suit: Suit.Green, name: "4" },
+  { cardType: CardType.Group, suit: Suit.Red, name: "R" },
+  { cardType: CardType.Unit, suit: Suit.Amber, name: "1" },
+  { cardType: CardType.Unit, suit: Suit.Blue, name: "2" },
+  { cardType: CardType.Unit, suit: Suit.Green, name: "3" },
+  { cardType: CardType.Unit, suit: Suit.Red, name: "4" },
 ] as const
 
 export const cardData = (i: number) => cardList[i] as const
+
 export const cardColor = (i: number) => {
   const data = cardData(i)
   return CardType.Group === data.cardType? (
     {
-      [Suit.Amber]: brown[700],
-      [Suit.Blue]: blue[700],
-      [Suit.Green]: green[700],
-      [Suit.Red]: red[700],
+      [Suit.Amber]: brown[900],
+      [Suit.Blue]: blue[900],
+      [Suit.Green]: green[900],
+      [Suit.Red]: red[900],
     }[data.suit]
   ) : CardType.Unit === data.cardType? (
     {
-      [Suit.Amber]: brown[700],
-      [Suit.Blue]: blue[700],
-      [Suit.Green]: green[700],
-      [Suit.Red]: red[700],
+      [Suit.Amber]: brown[900],
+      [Suit.Blue]: blue[900],
+      [Suit.Green]: green[900],
+      [Suit.Red]: red[900],
     }[data.suit]
   ) : (
     {
-      [CardType.Art]: purple[700],
+      [CardType.Art]: pink[900],
     }[data.cardType]
   ) as string
 }
+
+export const tableColor = '#044d1c'
 
 const shuffle = (debug = false) => {
   const src = [...cardList.keys()]

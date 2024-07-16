@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import {green, grey, red} from "../styles/colors"
 import useGame from "../hooks/useGame"
-import {size} from "../data/cards"
+import {size, tableColor} from "../data/cards"
 import Card from "./Card"
 
 interface ITierProps {
@@ -10,7 +10,7 @@ interface ITierProps {
 
 const Tier = styled.div<ITierProps>`
   background: ${({$status}) => (
-    $status < 0? green[700]: $status > 0? red[700]: grey[700]
+    $status < 0? green[800]: $status > 0? red[800]: tableColor
   )};
   border: 1px solid ${grey[600]};
   display: flex;
