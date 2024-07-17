@@ -34,6 +34,15 @@ const useGame = () => {
     dispatch({type: Actions.SetPlayers, payload: []})
   }
 
+  const zoneCards = (idZone: string, idPlayer: string = commonId) => {
+    return cards.filter(card => card.idZone === idZone && card.idPlayer === idPlayer)
+  }
+
+  const mustDiscard = () => {
+    const nDiscard = 5
+    return zoneCards(Zone.Hand, curPlayer().id).length > nDiscard
+  }
+
   const nextHand = () => {
     const playerId = players.at(curHand).id
     dispatch({type: Actions.SetPlayer, payload: {
@@ -45,8 +54,7 @@ const useGame = () => {
     dispatch({type: Actions.SetCurHand, payload: newHand})
 
     const nDraw = 2
-    const drawIds = cards.filter(card => card.idZone === Zone.DrawPile)
-      .slice(0, nDraw).map(card => card.id)
+    const drawIds = zoneCards(Zone.DrawPile).slice(0, nDraw).map(card => card.id)
     if (drawIds.length) {
       dispatch({type: Actions.SetCards, payload: cards.map(
         card => drawIds.includes(card.id)? {
@@ -66,9 +74,7 @@ const useGame = () => {
   }
 
   const getPyramid = (idPlayer: string) => {
-    const filteredCards = (tier: number) => cards.filter(card => (
-      card.idZone === tierZones.at(tier).id && card.idPlayer === idPlayer
-    ))
+    const filteredCards = (tier: number) => zoneCards(tierZones.at(tier).id, idPlayer)
 
     const tiers = [
       filteredCards(0),
@@ -157,11 +163,13 @@ const useGame = () => {
     getPyramid,
     isActive,
     isValidCard,
+    mustDiscard,
     newGame,
     nextHand,
     playTier,
     setIdActive,
     tierDown,
+    zoneCards,
   }
 }
 

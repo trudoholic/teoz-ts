@@ -14,7 +14,7 @@ const CardContainer = styled.div`
 
 const Zone = ({id, idPlayer}: IZone) => {
   const {
-    cards,
+    zoneCards,
   } = useGame()
 
   const styles = {
@@ -31,18 +31,18 @@ const Zone = ({id, idPlayer}: IZone) => {
     },
   };
 
-  const zoneCards = cards.filter(card => card.idZone === id && card.idPlayer === idPlayer)
+  const cards = zoneCards(id, idPlayer)
 
   return (
     <>
       <div style={styles.box}>
         {
-          zoneCards.length ?
+          cards.length ?
             <details open>
-              <summary>{`${id} ${idPlayer} [${zoneCards.length}]`}</summary>
+              <summary>{`${id} ${idPlayer} [${cards.length}]`}</summary>
 
               <CardContainer>
-                {zoneCards.map((card) => (
+                {cards.map((card) => (
                   <Card {...card} key={card.id}/>
                 ))}
               </CardContainer>

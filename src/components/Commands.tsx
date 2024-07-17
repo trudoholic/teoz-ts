@@ -23,6 +23,7 @@ const Commands = () => {
     nextHand,
     dropCard,
     getPyramid,
+    mustDiscard,
     setIdActive,
     playTier,
     tierDown,
@@ -42,13 +43,8 @@ const Commands = () => {
               Undo
             </button>
 
-            <button onClick={dropCard}>
-              Drop Card
-            </button>
-
-            <hr/>
             {
-              player.canPlay? (
+              player.canPlay ? (
                 pyramid.statuses.toReversed().map((status, idx) => (
                   status < 0? (
                     <button key={idx} onClick={() => playTier(SIZE - 1 - idx)}>
@@ -59,24 +55,37 @@ const Commands = () => {
               ): null
             }
 
-            <hr/>
             {
-              pyramid.status? (
+              pyramid.status ? (
                 <button onClick={tierDown}>
                   Fix Tier
                 </button>
               ): null
             }
 
+            {
+              mustDiscard() ? (
+                <button onClick={dropCard}>
+                  Drop Card
+                </button>
+              ): null
+            }
+
           </>: <>{/*NO ACTIVE CARD*/}
 
-            <button onClick={nextHand}>
-              Next
-            </button>
+            {
+              !mustDiscard() ? (
+                <>
+                  <button onClick={nextHand}>
+                    Next
+                  </button>
 
-            <button onClick={endGame}>
-              End Game
-            </button>
+                  <button onClick={endGame}>
+                    End Game
+                  </button>
+                </>
+              ): <h2>Must Discard!</h2>
+            }
 
           </>
       }
