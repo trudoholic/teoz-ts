@@ -40,7 +40,22 @@ const useGame = () => {
       id: playerId,
       canPlay: true,
     }})
-    dispatch({type: Actions.SetCurHand, payload: (curHand + 1) % nPlayers})
+
+    const newHand = (curHand + 1) % nPlayers
+    dispatch({type: Actions.SetCurHand, payload: newHand})
+
+    const nDraw = 2
+    const drawIds = cards.filter(card => card.idZone === Zone.DrawPile)
+      .slice(0, nDraw).map(card => card.id)
+    if (drawIds.length) {
+      dispatch({type: Actions.SetCards, payload: cards.map(
+        card => drawIds.includes(card.id)? {
+          ...card,
+          idPlayer: players.at(newHand).id,
+          idZone: Zone.Hand,
+        }: card
+      )})
+    }
   }
 
   // const formatId = (n: number) => `00${n + 1}`.slice(-3)
