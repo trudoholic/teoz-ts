@@ -40,6 +40,7 @@ const Commands = () => {
 
   return (
     <StyledCommands>
+      {player.winner? <h2>Winner!</h2>: null}
       {
         idActive >= 0 ?
           <>

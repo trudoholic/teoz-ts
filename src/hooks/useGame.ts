@@ -67,6 +67,12 @@ const useGame = () => {
         }: card
       )})
     }
+
+    const newPlayerId = players.at(newHand).id
+    dispatch({type: Actions.SetPlayer, payload: {
+      id: newPlayerId,
+      winner: getPyramid(newPlayerId).lvl === 10,
+    }})
   }
 
   // const formatId = (n: number) => `00${n + 1}`.slice(-3)

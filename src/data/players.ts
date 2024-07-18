@@ -3,40 +3,19 @@ export interface IPlayer {
   name: string
   canBuild: boolean
   canMove: boolean
-  // value: number
+  winner: boolean
 }
 
 export const commonId = "0"
 
-export const playerList: IPlayer[] = [
-  {
-    id: "1",
-    name: 'Anna',
-    // value: 0,
-    canBuild: true,
-    canMove: true,
-  },
-  {
-    id: "2",
-    name: 'Beth',
-    // value: 0,
-    canBuild: true,
-    canMove: true,
-  },
-  {
-    id: "3",
-    name: 'Ciri',
-    // value: 0,
-    canBuild: true,
-    canMove: true,
-  },
-  {
-    id: "4",
-    name: 'Dana',
-    // value: 0,
-    canBuild: true,
-    canMove: true,
-  },
-]
+const playerNames = ["Anna", "Beth", "Ciri", "Dana"]
+
+const playerList: IPlayer[] = playerNames.map((name, idx) => ({
+  id: `${idx + 1}`,
+  name,
+  canBuild: true,
+  canMove: true,
+  winner: false,
+}))
 
 export const getPlayers = (n: number) => playerList.slice(0, n)

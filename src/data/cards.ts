@@ -53,15 +53,23 @@ const cardList: ICardData[] = [
   { cardType: CardType.Group, suit: Suit.Amber, name: "1" },
   { cardType: CardType.Group, suit: Suit.Amber, name: "2" },
   { cardType: CardType.Group, suit: Suit.Amber, name: "3" },
+  { cardType: CardType.Group, suit: Suit.Amber, name: "4" },
+  { cardType: CardType.Group, suit: Suit.Amber, name: "5" },
   { cardType: CardType.Group, suit: Suit.Blue, name: "1" },
   { cardType: CardType.Group, suit: Suit.Blue, name: "2" },
   { cardType: CardType.Group, suit: Suit.Blue, name: "3" },
+  { cardType: CardType.Group, suit: Suit.Blue, name: "4" },
+  { cardType: CardType.Group, suit: Suit.Blue, name: "5" },
   { cardType: CardType.Group, suit: Suit.Green, name: "1" },
   { cardType: CardType.Group, suit: Suit.Green, name: "2" },
   { cardType: CardType.Group, suit: Suit.Green, name: "3" },
+  { cardType: CardType.Group, suit: Suit.Green, name: "4" },
+  { cardType: CardType.Group, suit: Suit.Green, name: "5" },
   { cardType: CardType.Group, suit: Suit.Red, name: "1" },
   { cardType: CardType.Group, suit: Suit.Red, name: "2" },
   { cardType: CardType.Group, suit: Suit.Red, name: "3" },
+  { cardType: CardType.Group, suit: Suit.Red, name: "4" },
+  { cardType: CardType.Group, suit: Suit.Red, name: "5" },
 
 ] as const
 
