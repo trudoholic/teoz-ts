@@ -95,7 +95,10 @@ const useGame = () => {
     const getStatus = (i: number) => +(tiers.at(i).length < sizes.at(i)? -1: tiers.at(i).length > sizes.at(i)? 1: 0)
     const statuses = tiers.map((_, i) => getStatus(i))
 
+    const hasSuit = (i: number, suit: string) => tiers.at(i).some(card => cardData(card.id).suit === suit)
+
     return {
+      hasSuit,
       statuses,
       tiers,
       atk: tiers.map(t => t.length).filter(t => !!t).length,

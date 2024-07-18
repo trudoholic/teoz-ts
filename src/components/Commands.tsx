@@ -51,7 +51,7 @@ const Commands = () => {
             {
               data.cardType === CardType.Group && player.canBuild ? (
                 pyramid.statuses.toReversed().map((status, idx) => (
-                  status < 0? (
+                  status < 0 && !pyramid.hasSuit(SIZE - 1 - idx, data.suit ?? "") ? (
                     <button key={idx} onClick={() => playTier(SIZE - 1 - idx)}>
                       Tier {SIZE - idx}
                     </button>
