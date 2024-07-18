@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import {green} from "../styles/colors"
+import {CardType} from "../data/cards"
 import useGame from "../hooks/useGame"
 
 export const StyledCommands = styled.div`
@@ -18,6 +19,8 @@ export const StyledCommands = styled.div`
 const Commands = () => {
   const {
     idActive,
+    // activeCard,
+    cardData,
     curPlayer,
     endGame,
     nextHand,
@@ -29,6 +32,8 @@ const Commands = () => {
     tierDown,
   } = useGame()
 
+  // const card = activeCard()
+  const data = cardData(idActive)
   const player = curPlayer()
   const pyramid = getPyramid(player.id)
   const SIZE = pyramid.statuses.length
@@ -44,7 +49,7 @@ const Commands = () => {
             </button>
 
             {
-              player.canPlay ? (
+              data.cardType === CardType.Group && player.canBuild ? (
                 pyramid.statuses.toReversed().map((status, idx) => (
                   status < 0? (
                     <button key={idx} onClick={() => playTier(SIZE - 1 - idx)}>

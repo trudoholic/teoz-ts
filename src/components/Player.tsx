@@ -59,7 +59,7 @@ const Player = ({idx}: IPlayerProps) => {
         $turn={idx === curTurn}
         $pass={false}
       >
-        {`${player.name} [${idx}] ${player.canPlay? "": "#"}`}
+        {`${player.name} [${idx}] ${player.canBuild? "": "#"}`}
       </StyledPlayerInfo>
 
       <Pyramid idPlayer={player.id}/>

@@ -40,9 +40,15 @@ const Suit = {
 } as const
 
 const cardList: ICardData[] = [
+
   { cardType: CardType.Art, name: "1" },
   { cardType: CardType.Art, name: "2" },
   { cardType: CardType.Art, name: "3" },
+
+  { cardType: CardType.Unit, suit: Suit.Amber, name: "1" },
+  { cardType: CardType.Unit, suit: Suit.Blue, name: "2" },
+  { cardType: CardType.Unit, suit: Suit.Green, name: "3" },
+  { cardType: CardType.Unit, suit: Suit.Red, name: "4" },
 
   { cardType: CardType.Group, suit: Suit.Amber, name: "1" },
   { cardType: CardType.Group, suit: Suit.Amber, name: "2" },
@@ -57,10 +63,6 @@ const cardList: ICardData[] = [
   { cardType: CardType.Group, suit: Suit.Red, name: "2" },
   { cardType: CardType.Group, suit: Suit.Red, name: "3" },
 
-  { cardType: CardType.Unit, suit: Suit.Amber, name: "1" },
-  { cardType: CardType.Unit, suit: Suit.Blue, name: "2" },
-  { cardType: CardType.Unit, suit: Suit.Green, name: "3" },
-  { cardType: CardType.Unit, suit: Suit.Red, name: "4" },
 ] as const
 
 export const cardData = (i: number) => cardList[i] as const

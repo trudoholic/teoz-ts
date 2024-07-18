@@ -2,9 +2,12 @@ import useAppContext from "../context/useAppContext"
 import {Actions} from "../context/reducer"
 import {IState} from "../context/state"
 
-import {cardData, dealCards, ICard} from "../data/cards"
+import {cardData, CardType, dealCards, ICard} from "../data/cards"
 import {commonId, getPlayers} from "../data/players"
 import {tierZones, Zone} from "../data/zones"
+
+const nDeal = 5
+const nDraw = 1
 
 const useGame = () => {
   const { state, dispatch } = useAppContext()
@@ -18,12 +21,12 @@ const useGame = () => {
     players,
   } = state as IState
 
-  const beginGame = (n: number) => {
-    const eldestHand = Math.floor(Math.random() * n)
-    dispatch({type: Actions.SetCards, payload: dealCards(3, n, eldestHand)})
+  const beginGame = (numPlayers: number) => {
+    const eldestHand = Math.floor(Math.random() * numPlayers)
+    dispatch({type: Actions.SetCards, payload: dealCards(nDeal, numPlayers, eldestHand)})
     dispatch({type: Actions.SetCurHand, payload: eldestHand})
     dispatch({type: Actions.SetGameOver, payload: false})
-    dispatch({type: Actions.SetPlayers, payload: getPlayers(n)})
+    dispatch({type: Actions.SetPlayers, payload: getPlayers(numPlayers)})
   }
 
   const endGame = () => {
@@ -47,13 +50,13 @@ const useGame = () => {
     const playerId = players.at(curHand).id
     dispatch({type: Actions.SetPlayer, payload: {
       id: playerId,
-      canPlay: true,
+      canBuild: true,
+      canMove: true,
     }})
 
     const newHand = (curHand + 1) % nPlayers
     dispatch({type: Actions.SetCurHand, payload: newHand})
 
-    const nDraw = 2
     const drawIds = zoneCards(Zone.DrawPile).slice(0, nDraw).map(card => card.id)
     if (drawIds.length) {
       dispatch({type: Actions.SetCards, payload: cards.map(
@@ -67,6 +70,8 @@ const useGame = () => {
   }
 
   // const formatId = (n: number) => `00${n + 1}`.slice(-3)
+  const activeCard = () => cards.find(card => idActive === card.id)
+
   const isActive = (id: number) => { return idActive === id }
 
   const setIdActive = (id: number = -1) => {
@@ -125,7 +130,7 @@ const useGame = () => {
     moveCard(tierZones.at(tier).id, playerId)
     dispatch({type: Actions.SetPlayer, payload: {
       id: playerId,
-      canPlay: false,
+      canBuild: false,
     }})
   }
 
@@ -139,11 +144,40 @@ const useGame = () => {
     }
   }
 
+  const isCurPlayer = (idPlayer: string): boolean => {
+    return idPlayer === curPlayer().id
+  }
+
   const isValidCard = (card: ICard): boolean => {
-    return (
-      card.idPlayer === curPlayer().id &&
-      (card.idZone === Zone.Hand && curPlayer().canPlay)
-    )
+    const data = cardData(card.id)
+
+    if (isCurPlayer(card.idPlayer)) {
+
+      if (card.idZone === Zone.Hand) {
+
+        if (data.cardType === CardType.Group) {
+          return curPlayer().canBuild
+        }
+        else {
+          return true
+        }
+
+      }
+      if (card.idZone === Zone.Tier0) {
+
+        if (data.cardType === CardType.Group) {
+          return curPlayer().canMove
+        }
+
+      }
+      else {
+        return false
+      }
+
+    }
+    else {
+      return false
+    }
   }
 
   return {
@@ -155,6 +189,7 @@ const useGame = () => {
     nPlayers,
     players,
 
+    activeCard,
     beginGame,
     cardData,
     curPlayer,
@@ -162,6 +197,7 @@ const useGame = () => {
     endGame,
     getPyramid,
     isActive,
+    isCurPlayer,
     isValidCard,
     mustDiscard,
     newGame,
