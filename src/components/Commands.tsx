@@ -43,7 +43,15 @@ const Commands = () => {
 
   return (
     <StyledCommands>
-      {player.winner? <h2>Winner!</h2>: null}
+      {player.winner?
+        <>
+          <h2>Winner!</h2>
+          <button onClick={endGame}>
+            End Game
+          </button>
+        </>
+        : null
+      }
       {
         idActive >= 0 ?
           <>
@@ -96,10 +104,6 @@ const Commands = () => {
                       </button>
                     )
                   }
-
-                  <button onClick={endGame}>
-                    End Game
-                  </button>
                 </>
               ): <h2>Play or Discard</h2>
             }

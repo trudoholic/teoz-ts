@@ -23,6 +23,8 @@ const useGame = () => {
     ply,
   } = state as IState
 
+  const round = Math.floor(ply / nPlayers)
+
   const beginGame = (numPlayers: number) => {
     dispatch({type: Actions.SetGameState, payload: GameState.Begin})
     dispatch({type: Actions.SetPlayers, payload: getPlayers(numPlayers)})
@@ -58,24 +60,27 @@ const useGame = () => {
   }
 
   const beginHand = (hand: number) => {
+    dispatch({type: Actions.SetPly, payload: ply + 1})
     console.group(`Hand: ${hand}`)
     dispatch({type: Actions.SetCurHand, payload: hand})
-
-    const drawIds = zoneCards(Zone.DrawPile).slice(0, nDraw).map(card => card.id)
-    if (drawIds.length) {
-      dispatch({type: Actions.SetCards, payload: cards.map(
-          card => drawIds.includes(card.id)? {
-            ...card,
-            idPlayer: players.at(hand).id,
-            idZone: Zone.Hand,
-          }: card
-        )})
-    }
-    else {
-      console.log("Deck is Empty!")
-    }
-
     const handId = players.at(hand).id
+
+    if (round) {
+      const drawIds = zoneCards(Zone.DrawPile).slice(0, nDraw).map(card => card.id)
+      if (drawIds.length) {
+        dispatch({type: Actions.SetCards, payload: cards.map(
+            card => drawIds.includes(card.id)? {
+              ...card,
+              idPlayer: handId,
+              idZone: Zone.Hand,
+            }: card
+          )})
+      }
+      else {
+        console.log("Deck is Empty!")
+      }
+    }
+
     const winner = getPyramid(handId).lvl === 10
     dispatch({type: Actions.SetPlayer, payload: {id: handId, winner}})
   }
@@ -92,8 +97,6 @@ const useGame = () => {
 
   const nextHand = () => {
     endHand()
-
-    dispatch({type: Actions.SetPly, payload: ply + 1})
     const newHand = (curHand + 1) % nPlayers
     beginHand(newHand)
   }
@@ -183,7 +186,7 @@ const useGame = () => {
   const isValidCard = (card: ICard): boolean => {
     const data = cardData(card.id)
 
-    if (isCurPlayer(card.idPlayer)) {
+    if (GameState.Main === gameState && isCurPlayer(card.idPlayer)) {
 
       if (card.idZone === Zone.Hand) {
 
@@ -221,6 +224,7 @@ const useGame = () => {
     nPlayers,
     players,
     ply,
+    round,
 
     activeCard,
     beginGame,
