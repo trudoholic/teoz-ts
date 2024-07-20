@@ -19,6 +19,7 @@ const GameMain = () => {
     idActive,
     nPlayers,
     players,
+    ply,
 
     cardData,
   } = useGame()
@@ -27,7 +28,7 @@ const GameMain = () => {
 
   return (
     <>
-      <h2>Game Main [{curHand} / {nPlayers}] {nameActive}</h2>
+      <h2>Game Main ({ply}:{Math.floor(ply/nPlayers)}) [{curHand} / {nPlayers}] {nameActive}</h2>
       <MainContainer>
         <Common/>
         {players.map((p, i) => <Player key={p.id} idx={i} />)}

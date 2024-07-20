@@ -1,22 +1,25 @@
-import { ICard } from "../data/cards"
-import { IPlayer } from "../data/players"
+import {GameState} from "../data/game"
+import {ICard} from "../data/cards"
+import {IPlayer} from "../data/players"
 
 export interface IState {
   cards: ICard[]
   curHand: number
   curTurn: number
+  gameState: string
   idActive: number
-  isGameOver: boolean
   nPlayers: number
   players: IPlayer[]
+  ply: number
 }
 
 export const defaultState: IState = {
   cards: [],
   curHand: 0,
   curTurn: 0,
+  gameState: GameState.Over,
   idActive: -1,
-  isGameOver: true,
   nPlayers: 0,
   players: [],
+  ply: 0,
 }

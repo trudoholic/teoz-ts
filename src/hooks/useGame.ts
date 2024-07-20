@@ -3,6 +3,7 @@ import {Actions} from "../context/reducer"
 import {IState} from "../context/state"
 
 import {cardData, CardType, dealCards, ICard} from "../data/cards"
+import {GameState} from "../data/game"
 import {commonId, getPlayers} from "../data/players"
 import {tierZones, Zone} from "../data/zones"
 
@@ -15,26 +16,36 @@ const useGame = () => {
     cards,
     curHand,
     curTurn,
+    gameState,
     idActive,
-    isGameOver,
     nPlayers,
     players,
+    ply,
   } = state as IState
 
   const beginGame = (numPlayers: number) => {
-    const eldestHand = Math.floor(Math.random() * numPlayers)
-    dispatch({type: Actions.SetCards, payload: dealCards(nDeal, numPlayers, eldestHand)})
-    dispatch({type: Actions.SetCurHand, payload: eldestHand})
-    dispatch({type: Actions.SetGameOver, payload: false})
+    dispatch({type: Actions.SetGameState, payload: GameState.Begin})
     dispatch({type: Actions.SetPlayers, payload: getPlayers(numPlayers)})
+    dispatch({type: Actions.SetPly, payload: 0})
+
+    const eldestHand = Math.floor(Math.random() * numPlayers)
+    dispatch({type: Actions.SetCurHand, payload: eldestHand})
+    dispatch({type: Actions.SetCards, payload: dealCards(nDeal, numPlayers, eldestHand)})
+  }
+
+  const startGame = () => {
+    dispatch({type: Actions.SetGameState, payload: GameState.Main})
+    beginHand(curHand)
   }
 
   const endGame = () => {
-    dispatch({type: Actions.SetGameOver, payload: true})
+    endHand()
+    dispatch({type: Actions.SetGameState, payload: GameState.End})
   }
 
   const newGame = () => {
     dispatch({type: Actions.SetPlayers, payload: []})
+    dispatch({type: Actions.SetGameState, payload: GameState.Over})
   }
 
   const zoneCards = (idZone: string, idPlayer: string = commonId) => {
@@ -46,33 +57,45 @@ const useGame = () => {
     return zoneCards(Zone.Hand, curPlayer().id).length > nDiscard
   }
 
-  const nextHand = () => {
+  const beginHand = (hand: number) => {
+    console.group(`Hand: ${hand}`)
+    dispatch({type: Actions.SetCurHand, payload: hand})
+
+    const drawIds = zoneCards(Zone.DrawPile).slice(0, nDraw).map(card => card.id)
+    if (drawIds.length) {
+      dispatch({type: Actions.SetCards, payload: cards.map(
+          card => drawIds.includes(card.id)? {
+            ...card,
+            idPlayer: players.at(hand).id,
+            idZone: Zone.Hand,
+          }: card
+        )})
+    }
+    else {
+      console.log("Deck is Empty!")
+    }
+
+    const handId = players.at(hand).id
+    const winner = getPyramid(handId).lvl === 10
+    dispatch({type: Actions.SetPlayer, payload: {id: handId, winner}})
+  }
+
+  const endHand = () => {
     const playerId = players.at(curHand).id
     dispatch({type: Actions.SetPlayer, payload: {
       id: playerId,
       canBuild: true,
       canMove: true,
     }})
+    console.groupEnd()
+  }
 
+  const nextHand = () => {
+    endHand()
+
+    dispatch({type: Actions.SetPly, payload: ply + 1})
     const newHand = (curHand + 1) % nPlayers
-    dispatch({type: Actions.SetCurHand, payload: newHand})
-
-    const drawIds = zoneCards(Zone.DrawPile).slice(0, nDraw).map(card => card.id)
-    if (drawIds.length) {
-      dispatch({type: Actions.SetCards, payload: cards.map(
-        card => drawIds.includes(card.id)? {
-          ...card,
-          idPlayer: players.at(newHand).id,
-          idZone: Zone.Hand,
-        }: card
-      )})
-    }
-
-    const newPlayerId = players.at(newHand).id
-    dispatch({type: Actions.SetPlayer, payload: {
-      id: newPlayerId,
-      winner: getPyramid(newPlayerId).lvl === 10,
-    }})
+    beginHand(newHand)
   }
 
   // const formatId = (n: number) => `00${n + 1}`.slice(-3)
@@ -193,10 +216,11 @@ const useGame = () => {
     cards,
     curHand,
     curTurn,
+    gameState,
     idActive,
-    isGameOver,
     nPlayers,
     players,
+    ply,
 
     activeCard,
     beginGame,
@@ -213,6 +237,7 @@ const useGame = () => {
     nextHand,
     playTier,
     setIdActive,
+    startGame,
     tierDown,
     zoneCards,
   }

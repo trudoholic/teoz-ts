@@ -6,18 +6,20 @@ export enum Actions {
   SetCards,
   SetCurHand,
   SetIdActive,
-  SetGameOver,
+  SetGameState,
   SetPlayer,
   SetPlayers,
+  SetPly,
 }
 
 export type TAction =
   | { type: Actions.SetCards, payload: ICard[] }
   | { type: Actions.SetCurHand, payload: number }
   | { type: Actions.SetIdActive, payload: number }
-  | { type: Actions.SetGameOver, payload: boolean }
+  | { type: Actions.SetGameState, payload: string }
   | { type: Actions.SetPlayer, payload: Partial<IPlayer> }
   | { type: Actions.SetPlayers, payload: IPlayer[] }
+  | { type: Actions.SetPly, payload: number }
 
 export const reducer = (state: IState, action: TAction): IState => {
   switch (action.type) {
@@ -34,8 +36,8 @@ export const reducer = (state: IState, action: TAction): IState => {
       return { ...state, idActive: action.payload }
     }
 
-    case Actions.SetGameOver: {
-      return { ...state, isGameOver: action.payload }
+    case Actions.SetGameState: {
+      return { ...state, gameState: action.payload }
     }
 
     case Actions.SetPlayer: {
@@ -51,6 +53,10 @@ export const reducer = (state: IState, action: TAction): IState => {
         nPlayers: action.payload.length,
         players: action.payload,
       }
+    }
+
+    case Actions.SetPly: {
+      return { ...state, ply: action.payload }
     }
 
     default: {

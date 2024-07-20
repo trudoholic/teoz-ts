@@ -1,6 +1,7 @@
 import styled from "styled-components"
 import {green} from "../styles/colors"
 import {CardType} from "../data/cards"
+import {GameState} from "../data/game"
 import useGame from "../hooks/useGame"
 
 export const StyledCommands = styled.div`
@@ -20,6 +21,7 @@ const Commands = () => {
   const {
     idActive,
     // activeCard,
+    gameState,
     cardData,
     curPlayer,
     endGame,
@@ -29,6 +31,7 @@ const Commands = () => {
     mustDiscard,
     setIdActive,
     playTier,
+    startGame,
     tierDown,
   } = useGame()
 
@@ -82,15 +85,23 @@ const Commands = () => {
             {
               !mustDiscard() ? (
                 <>
-                  <button onClick={nextHand}>
-                    Next
-                  </button>
+                  {
+                    GameState.Begin === gameState ? (
+                      <button onClick={startGame}>
+                        Start
+                      </button>
+                    ): (
+                      <button onClick={nextHand}>
+                        Next
+                      </button>
+                    )
+                  }
 
                   <button onClick={endGame}>
                     End Game
                   </button>
                 </>
-              ): <h2>Must Discard!</h2>
+              ): <h2>Play or Discard</h2>
             }
 
           </>

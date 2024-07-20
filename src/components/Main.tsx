@@ -1,17 +1,20 @@
 import GameIntro from "./GameIntro"
 import GameMain from "./GameMain"
 import GameOutro from "./GameOutro"
+import {GameState} from "../data/game"
 import useGame from "../hooks/useGame"
 
 const Main = () => {
   const {
-    isGameOver,
-    nPlayers,
+    gameState,
   } = useGame()
 
   return (
     <>
-      { 0 === nPlayers? <GameIntro/>: isGameOver? <GameOutro/>: <GameMain/> }
+      {
+        GameState.Over === gameState? <GameIntro/>:
+          GameState.End === gameState? <GameOutro/>: <GameMain/>
+      }
     </>
   )
 }
