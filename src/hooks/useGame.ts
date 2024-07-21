@@ -3,7 +3,7 @@ import {Actions} from "../context/reducer"
 import {IState} from "../context/state"
 
 import {cardData, CardType, dealCards, ICard} from "../data/cards"
-import {GameState} from "../data/game"
+import {GameState, Phase} from "../data/game"
 import {commonId, getPlayers} from "../data/players"
 import {tierZones, Zone} from "../data/zones"
 
@@ -19,6 +19,7 @@ const useGame = () => {
     gameState,
     idActive,
     nPlayers,
+    phase,
     players,
     ply,
   } = state as IState
@@ -55,11 +56,12 @@ const useGame = () => {
   }
 
   const mustDiscard = () => {
-    const nDiscard = 5
-    return zoneCards(Zone.Hand, curPlayer().id).length > nDiscard
+    const limDiscard = 5, length = zoneCards(Zone.Hand, curPlayer().id).length
+    return length > limDiscard? length - limDiscard: 0
   }
 
   const beginHand = (hand: number) => {
+    dispatch({type: Actions.SetPhase, payload: Phase.Main})
     dispatch({type: Actions.SetPly, payload: ply + 1})
     console.group(`Hand: ${hand}`)
     dispatch({type: Actions.SetCurHand, payload: hand})
@@ -99,6 +101,15 @@ const useGame = () => {
     endHand()
     const newHand = (curHand + 1) % nPlayers
     beginHand(newHand)
+  }
+
+  const pass = () => {
+    if (mustDiscard()) {
+      dispatch({type: Actions.SetPhase, payload: Phase.End})
+    }
+    else {
+      nextHand()
+    }
   }
 
   // const formatId = (n: number) => `00${n + 1}`.slice(-3)
@@ -222,6 +233,7 @@ const useGame = () => {
     gameState,
     idActive,
     nPlayers,
+    phase,
     players,
     ply,
     round,
@@ -239,6 +251,7 @@ const useGame = () => {
     mustDiscard,
     newGame,
     nextHand,
+    pass,
     playTier,
     setIdActive,
     startGame,

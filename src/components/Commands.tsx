@@ -1,8 +1,8 @@
 import styled from "styled-components"
 import {green} from "../styles/colors"
-import {CardType} from "../data/cards"
-import {GameState} from "../data/game"
+import {GameState, Phase} from "../data/game"
 import useGame from "../hooks/useGame"
+import CardCommands from "./CardCommands"
 
 export const StyledCommands = styled.div`
   //background: olive;
@@ -20,95 +20,76 @@ export const StyledCommands = styled.div`
 const Commands = () => {
   const {
     idActive,
-    // activeCard,
     gameState,
-    cardData,
+    phase,
+
     curPlayer,
     endGame,
     nextHand,
-    dropCard,
-    getPyramid,
     mustDiscard,
-    setIdActive,
-    playTier,
+    pass,
     startGame,
-    tierDown,
   } = useGame()
 
-  // const card = activeCard()
-  const data = cardData(idActive)
   const player = curPlayer()
-  const pyramid = getPyramid(player.id)
-  const SIZE = pyramid.statuses.length
+  const nDiscard = mustDiscard()
 
   return (
     <StyledCommands>
-      {player.winner?
-        <>
-          <h2>Winner!</h2>
-          <button onClick={endGame}>
-            End Game
-          </button>
-        </>
-        : null
-      }
+      <h2>GameState: {gameState}</h2>
+      <h2>Phase: {phase}</h2>
+
       {
-        idActive >= 0 ?
+        GameState.Begin === gameState ? (
+          <button onClick={startGame}>
+            Start
+          </button>
+        ): GameState.Main === gameState ? (
           <>
-
-            <button onClick={() => setIdActive()}>
-              Undo
-            </button>
-
             {
-              data.cardType === CardType.Group && player.canBuild ? (
-                pyramid.statuses.toReversed().map((status, idx) => (
-                  status < 0 && !pyramid.hasSuit(SIZE - 1 - idx, data.suit ?? "") ? (
-                    <button key={idx} onClick={() => playTier(SIZE - 1 - idx)}>
-                      Tier {SIZE - idx}
-                    </button>
-                  ): null
-                ))
-              ): null
-            }
-
-            {
-              pyramid.status ? (
-                <button onClick={tierDown}>
-                  Fix Tier
-                </button>
-              ): null
-            }
-
-            {
-              mustDiscard() ? (
-                <button onClick={dropCard}>
-                  Drop Card
-                </button>
-              ): null
-            }
-
-          </>: <>{/*NO ACTIVE CARD*/}
-
-            {
-              !mustDiscard() ? (
+              player.winner ? (
+                <>
+                  <h2>Winner!</h2>
+                  <button onClick={endGame}>
+                    End Game
+                  </button>
+                </>
+              ) : Phase.Main === phase ? (
                 <>
                   {
-                    GameState.Begin === gameState ? (
-                      <button onClick={startGame}>
-                        Start
+                    idActive < 0 ? (
+                      <button onClick={pass}>
+                        Pass
                       </button>
-                    ): (
-                      <button onClick={nextHand}>
-                        Next
-                      </button>
+                    ) : (
+                      <CardCommands/>
                     )
                   }
                 </>
-              ): <h2>Play or Discard</h2>
+              ) : Phase.End === phase ? (
+                <>
+                  {
+                    idActive < 0 ? (
+                      <>
+                        {
+                          nDiscard ? (
+                            <h2>Discard {nDiscard}</h2>
+                          ) : (
+                            <button onClick={nextHand}>
+                              Next
+                            </button>
+                          )
+                        }
+                      </>
+                    ) : (
+                      <CardCommands/>
+                    )
+                  }
+                </>
+              ) : null
             }
-
           </>
+        ) : null
       }
     </StyledCommands>
   )

@@ -4,3 +4,10 @@ export const GameState = {
   Main: "Main",
   Over: "Over",
 } as const
+
+export const Phase = {
+  Begin: "Begin",
+  Combat: "Combat",
+  End: "End",
+  Main: "Main",
+} as const

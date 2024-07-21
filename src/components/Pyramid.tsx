@@ -38,11 +38,7 @@ const Pyramid = ({idPlayer}: IProps) => {
       overflow: "auto",
       border: `1px solid ${grey[500]}`,
       margin: "16px",
-      padding: "8px 0",
-    },
-    box0: {
-      color: "#ccc",
-      fontSize: "1.8rem",
+      // padding: "8px 0",
     },
   };
 

@@ -5,8 +5,9 @@ import { IPlayer } from "../data/players"
 export enum Actions {
   SetCards,
   SetCurHand,
-  SetIdActive,
   SetGameState,
+  SetIdActive,
+  SetPhase,
   SetPlayer,
   SetPlayers,
   SetPly,
@@ -15,8 +16,9 @@ export enum Actions {
 export type TAction =
   | { type: Actions.SetCards, payload: ICard[] }
   | { type: Actions.SetCurHand, payload: number }
-  | { type: Actions.SetIdActive, payload: number }
   | { type: Actions.SetGameState, payload: string }
+  | { type: Actions.SetIdActive, payload: number }
+  | { type: Actions.SetPhase, payload: string }
   | { type: Actions.SetPlayer, payload: Partial<IPlayer> }
   | { type: Actions.SetPlayers, payload: IPlayer[] }
   | { type: Actions.SetPly, payload: number }
@@ -32,12 +34,16 @@ export const reducer = (state: IState, action: TAction): IState => {
       return { ...state, curHand: action.payload, curTurn: action.payload }
     }
 
+    case Actions.SetGameState: {
+      return { ...state, gameState: action.payload }
+    }
+
     case Actions.SetIdActive: {
       return { ...state, idActive: action.payload }
     }
 
-    case Actions.SetGameState: {
-      return { ...state, gameState: action.payload }
+    case Actions.SetPhase: {
+      return { ...state, phase: action.payload }
     }
 
     case Actions.SetPlayer: {
