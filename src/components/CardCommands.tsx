@@ -1,14 +1,14 @@
-import {CardType} from "../data/cards"
 import {Phase} from "../data/game"
 import useGame from "../hooks/useGame"
 
 const CardCommands = () => {
   const {
     idActive,
-    phase,
-    // activeCard,
-    cardData,
     curPlayer,
+    phase,
+    activeCard,
+    cardData,
+    canBuildGroup,
     dropCard,
     getPyramid,
     setIdActive,
@@ -18,8 +18,7 @@ const CardCommands = () => {
 
   // const card = activeCard()
   const data = cardData(idActive)
-  const player = curPlayer()
-  const pyramid = getPyramid(player.id)
+  const pyramid = getPyramid(curPlayer.id)
   const SIZE = pyramid.statuses.length
 
   return (
@@ -33,7 +32,7 @@ const CardCommands = () => {
         Phase.Main === phase ? (
           <>
             {
-              data.cardType === CardType.Group && player.canBuild ? (
+              canBuildGroup(activeCard()) ? (
                 pyramid.statuses.toReversed().map((status, idx) => (
                   status < 0 && !pyramid.hasSuit(SIZE - 1 - idx, data.suit ?? "") ? (
                     <button key={idx} onClick={() => playTier(SIZE - 1 - idx)}>

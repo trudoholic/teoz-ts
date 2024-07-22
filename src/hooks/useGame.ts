@@ -24,6 +24,12 @@ const useGame = () => {
     ply,
   } = state as IState
 
+  const curPlayer = players.at(curTurn)
+
+  const isCurPlayer = (idPlayer: string): boolean => {
+    return idPlayer === curPlayer.id
+  }
+
   const round = Math.floor(ply / nPlayers)
 
   const beginGame = (numPlayers: number) => {
@@ -56,7 +62,7 @@ const useGame = () => {
   }
 
   const mustDiscard = () => {
-    const limDiscard = 5, length = zoneCards(Zone.Hand, curPlayer().id).length
+    const limDiscard = 5, length = zoneCards(Zone.Hand, curPlayer.id).length
     return length > limDiscard? length - limDiscard: 0
   }
 
@@ -168,11 +174,8 @@ const useGame = () => {
     moveCard(Zone.DiscardPile)
   }
 
-  // const curPlayer = () => { return players.at(curHand) }
-  const curPlayer = () => { return players.at(curTurn) }
-
   const playTier = (tier: number) => {
-    const playerId = curPlayer().id
+    const playerId = curPlayer.id
     moveCard(tierZones.at(tier).id, playerId)
     dispatch({type: Actions.SetPlayer, payload: {
       id: playerId,
@@ -185,41 +188,25 @@ const useGame = () => {
     if (activeCard) {
       const tier = tierZones.findIndex(zone => zone.id === activeCard.idZone)
       if (tier > 0) {
-        moveCard(tierZones.at(tier - 1).id, curPlayer().id)
+        moveCard(tierZones.at(tier - 1).id, curPlayer.id)
       }
     }
   }
 
-  const isCurPlayer = (idPlayer: string): boolean => {
-    return idPlayer === curPlayer().id
+  const canBuildGroup = (card: ICard): boolean => {
+    const data = cardData(card.id)
+    return curPlayer.canBuild && data.cardType === CardType.Group && card.idZone === Zone.Hand
+  }
+
+  const canMoveGroup = (card: ICard): boolean => {
+    const data = cardData(card.id)
+    return curPlayer.canMove && data.cardType === CardType.Group &&
+      tierZones.map(zone => zone.id).includes(card.idZone)
   }
 
   const isValidCard = (card: ICard): boolean => {
-    const data = cardData(card.id)
-
     if (GameState.Main === gameState && isCurPlayer(card.idPlayer)) {
-
-      if (card.idZone === Zone.Hand) {
-
-        if (data.cardType === CardType.Group) {
-          return curPlayer().canBuild
-        }
-        else {
-          return true
-        }
-
-      }
-      if (card.idZone === Zone.Tier0) {
-
-        if (data.cardType === CardType.Group) {
-          return curPlayer().canMove
-        }
-
-      }
-      else {
-        return false
-      }
-
+      return canBuildGroup(card) || canMoveGroup(card)
     }
     else {
       return false
@@ -229,6 +216,7 @@ const useGame = () => {
   return {
     cards,
     curHand,
+    curPlayer,
     curTurn,
     gameState,
     idActive,
@@ -240,8 +228,8 @@ const useGame = () => {
 
     activeCard,
     beginGame,
+    canBuildGroup,
     cardData,
-    curPlayer,
     dropCard,
     endGame,
     getPyramid,

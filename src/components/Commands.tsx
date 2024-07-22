@@ -21,9 +21,9 @@ const Commands = () => {
   const {
     idActive,
     gameState,
+    curPlayer,
     phase,
 
-    curPlayer,
     endGame,
     nextHand,
     mustDiscard,
@@ -31,7 +31,6 @@ const Commands = () => {
     startGame,
   } = useGame()
 
-  const player = curPlayer()
   const nDiscard = mustDiscard()
 
   return (
@@ -47,7 +46,7 @@ const Commands = () => {
         ): GameState.Main === gameState ? (
           <>
             {
-              player.winner ? (
+              curPlayer.winner ? (
                 <>
                   <h2>Winner!</h2>
                   <button onClick={endGame}>
