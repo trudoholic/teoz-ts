@@ -29,7 +29,6 @@ interface IProps {
 const Pyramid = ({idPlayer}: IProps) => {
   const {
     getPyramid,
-    isCurPlayer,
   } = useGame()
 
   const styles = {
@@ -43,7 +42,8 @@ const Pyramid = ({idPlayer}: IProps) => {
   };
 
   const pyramid = getPyramid(idPlayer ?? "")
-  const status = (i: number) => isCurPlayer(idPlayer)? +pyramid.statuses.toReversed().at(i): 0
+  const SIZE = pyramid.statuses.length
+  const tierStatus = (idx: number) => pyramid.getTierStatus(SIZE - 1 - idx, idPlayer)
 
   return (
     <>
@@ -52,7 +52,7 @@ const Pyramid = ({idPlayer}: IProps) => {
           pyramid.tiers.toReversed().map((tier, idx) => (
             <Tier
               key={idx}
-              $status={status(idx)}
+              $status={tierStatus(idx)}
             >
               {
                 tier.map((card) => (

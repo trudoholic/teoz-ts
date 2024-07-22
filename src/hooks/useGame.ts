@@ -144,9 +144,15 @@ const useGame = () => {
     const getStatus = (i: number) => +(tiers.at(i).length < sizes.at(i)? -1: tiers.at(i).length > sizes.at(i)? 1: 0)
     const statuses = tiers.map((_, i) => getStatus(i))
 
-    const hasSuit = (i: number, suit: string) => tiers.at(i).some(card => cardData(card.id).suit === suit)
+    const getTierStatus = (i: number, id: string) => GameState.Main === gameState && isCurPlayer(id)? getStatus(i): 0
+
+    const hasSuit = (i: number) => {
+      const suit = cardData(idActive)?.suit ?? ""
+      return  tiers.at(i).some(card => cardData(card.id).suit === suit)
+    }
 
     return {
+      getTierStatus,
       hasSuit,
       statuses,
       tiers,
@@ -195,18 +201,23 @@ const useGame = () => {
 
   const canBuildGroup = (card: ICard): boolean => {
     const data = cardData(card.id)
-    return curPlayer.canBuild && data.cardType === CardType.Group && card.idZone === Zone.Hand
+    return Phase.Main === phase && curPlayer.canBuild &&
+      data.cardType === CardType.Group && card.idZone === Zone.Hand
   }
 
   const canMoveGroup = (card: ICard): boolean => {
     const data = cardData(card.id)
-    return curPlayer.canMove && data.cardType === CardType.Group &&
+    return Phase.Main === phase && curPlayer.canMove && data.cardType === CardType.Group &&
       tierZones.map(zone => zone.id).includes(card.idZone)
+  }
+
+  const canDiscard = (card: ICard): boolean => {
+    return Phase.End === phase && card.idZone === Zone.Hand
   }
 
   const isValidCard = (card: ICard): boolean => {
     if (GameState.Main === gameState && isCurPlayer(card.idPlayer)) {
-      return canBuildGroup(card) || canMoveGroup(card)
+      return canBuildGroup(card) || canMoveGroup(card) || canDiscard(card)
     }
     else {
       return false
@@ -229,6 +240,7 @@ const useGame = () => {
     activeCard,
     beginGame,
     canBuildGroup,
+    canDiscard,
     cardData,
     dropCard,
     endGame,
