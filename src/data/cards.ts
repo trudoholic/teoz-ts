@@ -41,9 +41,9 @@ const Suit = {
 
 const cardList: ICardData[] = [
 
-  { cardType: CardType.Art, name: "1" },
-  { cardType: CardType.Art, name: "2" },
-  { cardType: CardType.Art, name: "3" },
+  { cardType: CardType.Art, name: "1", atk: 1, def: 1, lvl: 1 },
+  { cardType: CardType.Art, name: "2", atk: 2, def: 2, lvl: 2 },
+  { cardType: CardType.Art, name: "3", atk: 3, def: 3, lvl: 3 },
 
   { cardType: CardType.Unit, suit: Suit.Amber, name: "1" },
   { cardType: CardType.Unit, suit: Suit.Blue, name: "2" },

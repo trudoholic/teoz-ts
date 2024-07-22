@@ -48,9 +48,11 @@ const Player = ({idx}: IPlayerProps) => {
     curHand,
     curTurn,
     players,
+    artBonus,
   } = useGame()
 
   const player: IPlayer = players[idx]
+  const bonus = artBonus(player.id)
 
   return (
     <StyledPlayer>
@@ -63,6 +65,7 @@ const Player = ({idx}: IPlayerProps) => {
       </StyledPlayerInfo>
 
       <Pyramid idPlayer={player.id}/>
+      BONUS ATK: {bonus.atk} - DEF: {bonus.def}
 
       {
         playerZones.map((zone) =>

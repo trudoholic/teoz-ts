@@ -7,9 +7,11 @@ const CardCommands = () => {
     activeCard,
     canBuildGroup,
     canDiscard,
+    canPlayArtifact,
     dropCard,
     getPyramid,
     setIdActive,
+    playArtifact,
     playTier,
     tierDown,
   } = useGame()
@@ -34,6 +36,14 @@ const CardCommands = () => {
               </button>
             ): null
           ))
+        ): null
+      }
+
+      {
+        canPlayArtifact(card) ? (
+          <button onClick={playArtifact}>
+            Play
+          </button>
         ): null
       }
 

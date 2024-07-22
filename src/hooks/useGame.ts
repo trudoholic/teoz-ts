@@ -180,6 +180,10 @@ const useGame = () => {
     moveCard(Zone.DiscardPile)
   }
 
+  const playArtifact = () => {
+    moveCard(Zone.Keep, curPlayer.id)
+  }
+
   const playTier = (tier: number) => {
     const playerId = curPlayer.id
     moveCard(tierZones.at(tier).id, playerId)
@@ -206,8 +210,8 @@ const useGame = () => {
   }
 
   const canMoveGroup = (card: ICard): boolean => {
-    const data = cardData(card.id)
-    return Phase.Main === phase && curPlayer.canMove && data.cardType === CardType.Group &&
+    return Phase.Main === phase && curPlayer.canMove &&
+      cardData(card.id).cardType === CardType.Group &&
       tierZones.map(zone => zone.id).includes(card.idZone)
   }
 
@@ -215,9 +219,25 @@ const useGame = () => {
     return Phase.End === phase && card.idZone === Zone.Hand
   }
 
+  const canPlayArtifact = (card: ICard): boolean => {
+    const data = cardData(card.id)
+    const pyramid = getPyramid(curPlayer.id)
+    return Phase.Main === phase && card.idZone === Zone.Hand &&
+      data.cardType === CardType.Art && data.lvl <= pyramid.lvl
+  }
+
+  const artBonus = (idPlayer: string) => {
+    return cards.filter(card => (
+      card.idPlayer === idPlayer && card.idZone === Zone.Keep && cardData(card.id).cardType === CardType.Art
+    )).reduce((acc, card) => ({
+      atk: acc.atk + cardData(card.id).atk,
+      def: acc.def + cardData(card.id).def,
+    }), {atk: 0, def: 0})
+  }
+
   const isValidCard = (card: ICard): boolean => {
     if (GameState.Main === gameState && isCurPlayer(card.idPlayer)) {
-      return canBuildGroup(card) || canMoveGroup(card) || canDiscard(card)
+      return canBuildGroup(card) || canMoveGroup(card) || canDiscard(card) || canPlayArtifact(card)
     }
     else {
       return false
@@ -238,9 +258,11 @@ const useGame = () => {
     round,
 
     activeCard,
+    artBonus,
     beginGame,
     canBuildGroup,
     canDiscard,
+    canPlayArtifact,
     cardData,
     dropCard,
     endGame,
@@ -252,6 +274,7 @@ const useGame = () => {
     newGame,
     nextHand,
     pass,
+    playArtifact,
     playTier,
     setIdActive,
     startGame,

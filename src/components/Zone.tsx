@@ -39,7 +39,7 @@ const Zone = ({id, idPlayer}: IZone) => {
         {
           cards.length ?
             <details open>
-              <summary>{`${id} ${idPlayer} [${cards.length}]`}</summary>
+              <summary>{`${id} [${cards.length}]`}</summary>
 
               <CardContainer>
                 {cards.map((card) => (
