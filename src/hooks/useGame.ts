@@ -18,6 +18,7 @@ const useGame = () => {
     curTurn,
     gameState,
     idActive,
+    idTarget,
     nPlayers,
     phase,
     players,
@@ -120,11 +121,24 @@ const useGame = () => {
 
   // const formatId = (n: number) => `00${n + 1}`.slice(-3)
   const activeCard = () => cards.find(card => idActive === card.id)
+  const targetCard = () => cards.find(card => idTarget === card.id)
 
   const isActive = (id: number) => { return idActive === id }
+  const isTarget = (id: number) => { return idTarget === id }
 
-  const setIdActive = (id: number = -1) => {
-    dispatch({type: Actions.SetIdActive, payload: id})
+  const setId = (id: number = -1) => {
+    if (Phase.Main === phase) {
+      dispatch({type: Actions.SetIdActive, payload: id})
+      if (cardData(id)?.cardType === CardType.Unit) {
+        dispatch({type: Actions.SetPhase, payload: Phase.Target})
+      }
+    }
+    else if (Phase.Target === phase) {
+      dispatch({type: Actions.SetIdTarget, payload: id})
+    }
+    else if (Phase.End === phase) {
+      dispatch({type: Actions.SetIdActive, payload: id})
+    }
   }
 
   const getPyramid = (idPlayer: string) => {
@@ -163,30 +177,48 @@ const useGame = () => {
     }
   }
 
-  const moveCard = (idZone: string, idPlayer: string = commonId) => {
-    const newCards = cards.map(card => isActive(card.id)? {
-      ...card,
-      idPlayer: idPlayer,
-      idZone: idZone,
-    }: card)
+  const moveId = (
+    oldCards: ICard[],
+    id: number,
+    idZone: string,
+    idPlayer: string = commonId
+  ): ICard[] => {
+    const newCards = [...oldCards]
+    const [card] = newCards.splice(newCards.findIndex(c => c.id === id), 1)
+    newCards.push({...card, idZone: idZone, idPlayer: idPlayer})
+    return newCards
+  }
+
+  const setCards = (newCards: ICard[]) => {
     dispatch({type: Actions.SetCards, payload: newCards})
+    dispatch({type: Actions.SetIdTarget, payload: -1})
     dispatch({type: Actions.SetIdActive, payload: -1})
+  }
+
+  const attack = () => {
+    let newCards = moveId(cards, idTarget, Zone.DiscardPile)
+    newCards = moveId(newCards, idActive, Zone.DiscardPile)
+    setCards(newCards)
+    dispatch({type: Actions.SetPhase, payload: Phase.Main})
   }
 
   // const drawCard = () => {
   // }
 
   const dropCard = () => {
-    moveCard(Zone.DiscardPile)
+    const newCards = moveId(cards, idActive, Zone.DiscardPile)
+    setCards(newCards)
   }
 
   const playArtifact = () => {
-    moveCard(Zone.Keep, curPlayer.id)
+    const newCards = moveId(cards, idActive, Zone.Keep, curPlayer.id)
+    setCards(newCards)
   }
 
   const playTier = (tier: number) => {
     const playerId = curPlayer.id
-    moveCard(tierZones.at(tier).id, playerId)
+    const newCards = moveId(cards, idActive, tierZones.at(tier).id, playerId)
+    setCards(newCards)
     dispatch({type: Actions.SetPlayer, payload: {
       id: playerId,
       canBuild: false,
@@ -198,9 +230,23 @@ const useGame = () => {
     if (activeCard) {
       const tier = tierZones.findIndex(zone => zone.id === activeCard.idZone)
       if (tier > 0) {
-        moveCard(tierZones.at(tier - 1).id, curPlayer.id)
+        const newCards = moveId(cards, idActive, tierZones.at(tier - 1).id, curPlayer.id)
+        setCards(newCards)
       }
     }
+  }
+
+  const canAttack = (card: ICard): boolean => {
+    const data = cardData(card.id)
+    return Phase.Target === phase && tierZones.map(zone => zone.id).includes(card.idZone) &&
+      data.cardType === CardType.Group
+  }
+
+  const canTarget = (card: ICard): boolean => {
+    const data = cardData(card.id)
+    const pyramid = getPyramid(curPlayer.id)
+    return Phase.Main === phase && card.idZone === Zone.Hand &&
+      data.cardType === CardType.Unit && data.lvl <= pyramid.lvl
   }
 
   const canBuildGroup = (card: ICard): boolean => {
@@ -209,14 +255,14 @@ const useGame = () => {
       data.cardType === CardType.Group && card.idZone === Zone.Hand
   }
 
+  const canDiscard = (card: ICard): boolean => {
+    return Phase.End === phase && card.idZone === Zone.Hand
+  }
+
   const canMoveGroup = (card: ICard): boolean => {
     return Phase.Main === phase && curPlayer.canMove &&
       cardData(card.id).cardType === CardType.Group &&
       tierZones.map(zone => zone.id).includes(card.idZone)
-  }
-
-  const canDiscard = (card: ICard): boolean => {
-    return Phase.End === phase && card.idZone === Zone.Hand
   }
 
   const canPlayArtifact = (card: ICard): boolean => {
@@ -237,7 +283,18 @@ const useGame = () => {
 
   const isValidCard = (card: ICard): boolean => {
     if (GameState.Main === gameState && isCurPlayer(card.idPlayer)) {
-      return canBuildGroup(card) || canMoveGroup(card) || canDiscard(card) || canPlayArtifact(card)
+      return (
+        canBuildGroup(card) ||
+        canDiscard(card) ||
+        canMoveGroup(card) ||
+        canPlayArtifact(card) ||
+        canTarget(card)
+      )
+    }
+    else if (GameState.Main === gameState && !isCurPlayer(card.idPlayer)) {
+      return (
+        canAttack(card)
+      )
     }
     else {
       return false
@@ -251,6 +308,7 @@ const useGame = () => {
     curTurn,
     gameState,
     idActive,
+    idTarget,
     nPlayers,
     phase,
     players,
@@ -259,7 +317,10 @@ const useGame = () => {
 
     activeCard,
     artBonus,
+    attack,
     beginGame,
+    canAttack,
+    canTarget,
     canBuildGroup,
     canDiscard,
     canPlayArtifact,
@@ -268,6 +329,7 @@ const useGame = () => {
     endGame,
     getPyramid,
     isActive,
+    isTarget,
     isCurPlayer,
     isValidCard,
     mustDiscard,
@@ -276,8 +338,9 @@ const useGame = () => {
     pass,
     playArtifact,
     playTier,
-    setIdActive,
+    setId,
     startGame,
+    targetCard,
     tierDown,
     zoneCards,
   }

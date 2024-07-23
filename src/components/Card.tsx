@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import {green, grey, orange} from "../styles/colors"
+import {green, grey, red} from "../styles/colors"
 import useGame from "../hooks/useGame"
 import {
   cardColor, cardData, CardType, ICard, size, tableColor
@@ -16,7 +16,7 @@ export const StyledCard = styled.div<ICardProps>`
     ({$disabled, $active, $target}) => $active ? (
       `${green[300]}`
     ) : $target ? (
-      `${orange[300]}`
+      `${red[300]}`
     ) : $disabled ? (
       tableColor
     ) : (
@@ -80,22 +80,21 @@ const Card = (card: ICard) => {
 
   const {
     isActive,
+    isTarget,
     isValidCard,
-    setIdActive,
+    setId,
   } = useGame()
 
   const bgColor = cardColor(id)
-  const data = cardData(id)
-
   const cardDisabled = !isValidCard(card)
-  const cardTarget = false
+  const data = cardData(id)
 
   return (
     <StyledCard
       $active={isActive(id)}
-      $target={cardTarget}
+      $target={isTarget(id)}
       $disabled={cardDisabled}
-      {...(!cardDisabled && { "onClick": () => setIdActive(id) })}
+      {...(!cardDisabled && { "onClick": () => setId(id) })}
     >
       {
         CardType.Art === data.cardType? (

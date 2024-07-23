@@ -1,6 +1,6 @@
 import {commonId} from "./players";
 import {Zone} from "./zones";
-import {blue, brown, green, pink, red} from "../styles/colors"
+import {deepOrange, lightBlue, lightGreen, lime, pink} from "../styles/colors"
 
 export interface ICardData  {
   cardType: string
@@ -45,10 +45,10 @@ const cardList: ICardData[] = [
   { cardType: CardType.Art, name: "2", atk: 2, def: 2, lvl: 2 },
   { cardType: CardType.Art, name: "3", atk: 3, def: 3, lvl: 3 },
 
-  { cardType: CardType.Unit, suit: Suit.Amber, name: "1" },
-  { cardType: CardType.Unit, suit: Suit.Blue, name: "2" },
-  { cardType: CardType.Unit, suit: Suit.Green, name: "3" },
-  { cardType: CardType.Unit, suit: Suit.Red, name: "4" },
+  { cardType: CardType.Unit, atk: 1, def: 1, lvl: 1, suit: Suit.Amber, name: "1" },
+  { cardType: CardType.Unit, atk: 2, def: 2, lvl: 2, suit: Suit.Blue, name: "2" },
+  { cardType: CardType.Unit, atk: 3, def: 3, lvl: 3, suit: Suit.Green, name: "3" },
+  { cardType: CardType.Unit, atk: 4, def: 4, lvl: 4, suit: Suit.Red, name: "4" },
 
   { cardType: CardType.Group, suit: Suit.Amber, name: "1" },
   { cardType: CardType.Group, suit: Suit.Amber, name: "2" },
@@ -79,17 +79,17 @@ export const cardColor = (i: number) => {
   const data = cardData(i)
   return CardType.Group === data.cardType? (
     {
-      [Suit.Amber]: brown[900],
-      [Suit.Blue]: blue[900],
-      [Suit.Green]: green[900],
-      [Suit.Red]: red[900],
+      [Suit.Amber]: lime[900],
+      [Suit.Blue]: lightBlue[900],
+      [Suit.Green]: lightGreen[900],
+      [Suit.Red]: deepOrange[900],
     }[data.suit]
   ) : CardType.Unit === data.cardType? (
     {
-      [Suit.Amber]: brown[900],
-      [Suit.Blue]: blue[900],
-      [Suit.Green]: green[900],
-      [Suit.Red]: red[900],
+      [Suit.Amber]: lime[900],
+      [Suit.Blue]: lightBlue[900],
+      [Suit.Green]: lightGreen[900],
+      [Suit.Red]: deepOrange[900],
     }[data.suit]
   ) : (
     {

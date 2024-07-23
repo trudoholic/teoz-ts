@@ -8,6 +8,7 @@ export interface IState {
   curTurn: number
   gameState: string
   idActive: number
+  idTarget: number
   nPlayers: number
   phase: string
   players: IPlayer[]
@@ -20,6 +21,7 @@ export const defaultState: IState = {
   curTurn: 0,
   gameState: GameState.Over,
   idActive: -1,
+  idTarget: -1,
   nPlayers: 0,
   phase: Phase.Main,
   players: [],

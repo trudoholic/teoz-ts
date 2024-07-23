@@ -11,6 +11,7 @@ export enum Actions {
   SetPlayer,
   SetPlayers,
   SetPly,
+  SetIdTarget,
 }
 
 export type TAction =
@@ -22,6 +23,7 @@ export type TAction =
   | { type: Actions.SetPlayer, payload: Partial<IPlayer> }
   | { type: Actions.SetPlayers, payload: IPlayer[] }
   | { type: Actions.SetPly, payload: number }
+  | { type: Actions.SetIdTarget, payload: number }
 
 export const reducer = (state: IState, action: TAction): IState => {
   switch (action.type) {
@@ -63,6 +65,10 @@ export const reducer = (state: IState, action: TAction): IState => {
 
     case Actions.SetPly: {
       return { ...state, ply: action.payload }
+    }
+
+    case Actions.SetIdTarget: {
+      return { ...state, idTarget: action.payload }
     }
 
     default: {

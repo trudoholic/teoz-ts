@@ -20,10 +20,12 @@ export const StyledCommands = styled.div`
 const Commands = () => {
   const {
     idActive,
+    idTarget,
     gameState,
     curPlayer,
     phase,
 
+    attack,
     endGame,
     nextHand,
     mustDiscard,
@@ -62,6 +64,18 @@ const Commands = () => {
                       </button>
                     ) : (
                       <CardCommands/>
+                    )
+                  }
+                </>
+              ) : Phase.Target === phase ? (
+                <>
+                  {
+                    idTarget < 0 ? (
+                      <h2>Select Target</h2>
+                    ) : (
+                      <button onClick={attack}>
+                        Attack
+                      </button>
                     )
                   }
                 </>

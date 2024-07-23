@@ -10,7 +10,7 @@ const CardCommands = () => {
     canPlayArtifact,
     dropCard,
     getPyramid,
-    setIdActive,
+    setId,
     playArtifact,
     playTier,
     tierDown,
@@ -23,7 +23,7 @@ const CardCommands = () => {
   return (
     <>
 
-      <button onClick={() => setIdActive()}>
+      <button onClick={() => setId()}>
         Undo
       </button>
 

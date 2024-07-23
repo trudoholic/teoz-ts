@@ -10,4 +10,5 @@ export const Phase = {
   Combat: "Combat",
   End: "End",
   Main: "Main",
+  Target: "Target",
 } as const

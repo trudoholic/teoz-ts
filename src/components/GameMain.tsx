@@ -17,6 +17,7 @@ const GameMain = () => {
   const {
     curHand,
     idActive,
+    idTarget,
     nPlayers,
     players,
     round,
@@ -24,11 +25,12 @@ const GameMain = () => {
     cardData,
   } = useGame()
 
-  const nameActive = cardData(idActive)?.name ?? ""
+  const nameActive = cardData(idActive)?.name ?? "-"
+  const nameTarget = cardData(idTarget)?.name ?? "-"
 
   return (
     <>
-      <h2>Game Main (Round: {round}) [{curHand} / {nPlayers}] {nameActive}</h2>
+      <h2>Game Main (Round: {round}) [{curHand} / {nPlayers}] A: {nameActive} T: {nameTarget}</h2>
       <MainContainer>
         <Common/>
         {players.map((p, i) => <Player key={p.id} idx={i} />)}
