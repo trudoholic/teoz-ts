@@ -1,5 +1,6 @@
 export interface IPlayer {
   id: string
+  idx: number
   name: string
   canBuild: boolean
   canMove: boolean
@@ -12,6 +13,7 @@ const playerNames = ["Anna", "Beth", "Ciri", "Dana"]
 
 const playerList: IPlayer[] = playerNames.map((name, idx) => ({
   id: `${idx + 1}`,
+  idx,
   name,
   canBuild: true,
   canMove: true,

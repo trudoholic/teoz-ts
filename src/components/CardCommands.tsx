@@ -13,7 +13,6 @@ const CardCommands = () => {
     setId,
     playArtifact,
     playTier,
-    tierDown,
   } = useGame()
 
   const card = activeCard()
@@ -51,14 +50,6 @@ const CardCommands = () => {
         canDiscard(card) ? (
           <button onClick={dropCard}>
             Discard
-          </button>
-        ): null
-      }
-
-      {
-        pyramid.status ? (
-          <button onClick={tierDown}>
-            Fix Tier
           </button>
         ): null
       }

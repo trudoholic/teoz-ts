@@ -58,8 +58,8 @@ const useGame = () => {
     dispatch({type: Actions.SetGameState, payload: GameState.Over})
   }
 
-  const zoneCards = (idZone: string, idPlayer: string = commonId) => {
-    return cards.filter(card => card.idZone === idZone && card.idPlayer === idPlayer)
+  const zoneCards = (idZone: string, idPlayer: string = commonId, srcCards: ICard[] = cards) => {
+    return srcCards.filter(card => card.idZone === idZone && card.idPlayer === idPlayer)
   }
 
   const mustDiscard = () => {
@@ -136,13 +136,13 @@ const useGame = () => {
     else if (Phase.Target === phase) {
       dispatch({type: Actions.SetIdTarget, payload: id})
     }
-    else if (Phase.End === phase) {
+    else if (Phase.End === phase || Phase.Fix === phase) {
       dispatch({type: Actions.SetIdActive, payload: id})
     }
   }
 
-  const getPyramid = (idPlayer: string) => {
-    const filteredCards = (tier: number) => zoneCards(tierZones.at(tier).id, idPlayer)
+  const getPyramid = (idPlayer: string, srcCards: ICard[] = cards) => {
+    const filteredCards = (tier: number) => zoneCards(tierZones.at(tier).id, idPlayer, srcCards)
 
     const tiers = [
       filteredCards(0),
@@ -157,6 +157,7 @@ const useGame = () => {
 
     const getStatus = (i: number) => +(tiers.at(i).length < sizes.at(i)? -1: tiers.at(i).length > sizes.at(i)? 1: 0)
     const statuses = tiers.map((_, i) => getStatus(i))
+    const needsFixed = statuses.some(status => status > 0)
 
     const getTierStatus = (i: number, id: string) => GameState.Main === gameState && isCurPlayer(id)? getStatus(i): 0
 
@@ -168,6 +169,7 @@ const useGame = () => {
     return {
       getTierStatus,
       hasSuit,
+      needsFixed,
       statuses,
       tiers,
       atk: tiers.map(t => t.length).filter(t => !!t).length,
@@ -195,11 +197,36 @@ const useGame = () => {
     dispatch({type: Actions.SetIdActive, payload: -1})
   }
 
+  const sameShape = () => {
+    const dataActive = cardData(idActive)
+    const dataTarget = cardData(idTarget)
+    return dataActive.suit === dataTarget.suit
+  }
+
   const attack = () => {
-    let newCards = moveId(cards, idTarget, Zone.DiscardPile)
+    let newCards = [...cards]
+    if (sameShape()) {
+      newCards = moveId(newCards, idTarget, Zone.Hand, curPlayer.id)
+    } else {
+      newCards = moveId(newCards, idTarget, Zone.DiscardPile)
+    }
     newCards = moveId(newCards, idActive, Zone.DiscardPile)
     setCards(newCards)
+
+    const targetPlayer = players.find(player => player.id === targetCard().idPlayer)
+    const targetPyramid = getPyramid(targetPlayer.id, newCards)
+
+    if (targetPyramid.needsFixed) {
+      dispatch({type: Actions.SetPhase, payload: Phase.Fix})
+      dispatch({type: Actions.SetCurTurn, payload: targetPlayer.idx})
+    } else {
+      dispatch({type: Actions.SetPhase, payload: Phase.Main})
+    }
+  }
+
+  const onFixed = () => {
     dispatch({type: Actions.SetPhase, payload: Phase.Main})
+    dispatch({type: Actions.SetCurTurn, payload: curHand})
   }
 
   // const drawCard = () => {
@@ -239,6 +266,12 @@ const useGame = () => {
   const canAttack = (card: ICard): boolean => {
     const data = cardData(card.id)
     return Phase.Target === phase && tierZones.map(zone => zone.id).includes(card.idZone) &&
+      data.cardType === CardType.Group
+  }
+
+  const canFix = (card: ICard): boolean => {
+    const data = cardData(card.id)
+    return Phase.Fix === phase && tierZones.map(zone => zone.id).includes(card.idZone) &&
       data.cardType === CardType.Group
   }
 
@@ -286,6 +319,7 @@ const useGame = () => {
       return (
         canBuildGroup(card) ||
         canDiscard(card) ||
+        canFix(card) ||
         canMoveGroup(card) ||
         canPlayArtifact(card) ||
         canTarget(card)
@@ -335,6 +369,7 @@ const useGame = () => {
     mustDiscard,
     newGame,
     nextHand,
+    onFixed,
     pass,
     playArtifact,
     playTier,

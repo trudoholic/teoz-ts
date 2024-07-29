@@ -27,10 +27,13 @@ const Commands = () => {
 
     attack,
     endGame,
+    getPyramid,
     nextHand,
     mustDiscard,
+    onFixed,
     pass,
     startGame,
+    tierDown,
   } = useGame()
 
   const nDiscard = mustDiscard()
@@ -96,6 +99,20 @@ const Commands = () => {
                       </>
                     ) : (
                       <CardCommands/>
+                    )
+                  }
+                </>
+              ) : Phase.Fix === phase ? (
+                <>
+                  {
+                    getPyramid(curPlayer.id).status ? (
+                      <button onClick={tierDown}>
+                        Fix Tier
+                      </button>
+                    ): (
+                      <button onClick={onFixed}>
+                        OK
+                      </button>
                     )
                   }
                 </>
