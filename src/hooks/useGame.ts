@@ -134,7 +134,11 @@ const useGame = () => {
       }
     }
     else if (Phase.Target === phase) {
-      dispatch({type: Actions.SetIdTarget, payload: id})
+      if (id < 0 && idTarget < 0) {
+        dispatch({type: Actions.SetPhase, payload: Phase.Main})
+      } else {
+        dispatch({type: Actions.SetIdTarget, payload: id})
+      }
     }
     else if (Phase.End === phase || Phase.Fix === phase) {
       dispatch({type: Actions.SetIdActive, payload: id})
@@ -271,7 +275,10 @@ const useGame = () => {
 
   const canFix = (card: ICard): boolean => {
     const data = cardData(card.id)
-    return Phase.Fix === phase && tierZones.map(zone => zone.id).includes(card.idZone) &&
+    const pyramid = getPyramid(curPlayer.id)
+    return Phase.Fix === phase &&
+      tierZones.filter((_, idx) => pyramid.statuses.at(idx) > 0)
+        .map(zone => zone.id).includes(card.idZone) &&
       data.cardType === CardType.Group
   }
 

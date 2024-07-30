@@ -32,6 +32,7 @@ const Commands = () => {
     mustDiscard,
     onFixed,
     pass,
+    setId,
     startGame,
     tierDown,
   } = useGame()
@@ -72,6 +73,9 @@ const Commands = () => {
                 </>
               ) : Phase.Target === phase ? (
                 <>
+                  <button onClick={() => setId()}>
+                    Undo
+                  </button>
                   {
                     idTarget < 0 ? (
                       <h2>Select Target</h2>
