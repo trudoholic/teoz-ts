@@ -7,6 +7,7 @@ const CardCommands = () => {
     activeCard,
     canBuildGroup,
     canDiscard,
+    canMoveGroup,
     canPlayArtifact,
     dropCard,
     getPyramid,
@@ -28,6 +29,18 @@ const CardCommands = () => {
 
       {
         canBuildGroup(card) ? (
+          pyramid.statuses.toReversed().map((status, idx) => (
+            status < 0 && !pyramid.hasSuit(SIZE - 1 - idx) ? (
+              <button key={idx} onClick={() => playTier(SIZE - 1 - idx)}>
+                Tier {SIZE - idx}
+              </button>
+            ): null
+          ))
+        ): null
+      }
+
+      {
+        canMoveGroup(card) ? (
           pyramid.statuses.toReversed().map((status, idx) => (
             status < 0 && !pyramid.hasSuit(SIZE - 1 - idx) ? (
               <button key={idx} onClick={() => playTier(SIZE - 1 - idx)}>

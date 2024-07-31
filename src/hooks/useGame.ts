@@ -4,7 +4,7 @@ import {IState} from "../context/state"
 
 import {cardData, CardType, dealCards, ICard} from "../data/cards"
 import {GameState, Phase} from "../data/game"
-import {commonId, getPlayers} from "../data/players"
+import {commonId, getPlayers, IPlayer} from "../data/players"
 import {tierZones, Zone} from "../data/zones"
 
 const nDeal = 5
@@ -145,9 +145,14 @@ const useGame = () => {
     }
   }
 
+  const activeTier = () => {
+    const activeZone = activeCard()?.idZone ?? ""
+    const matches = activeZone.match(/[0-9]+$/)
+    return matches? +matches[0]: -1
+  }
+
   const getPyramid = (idPlayer: string, srcCards: ICard[] = cards) => {
     const filteredCards = (tier: number) => zoneCards(tierZones.at(tier).id, idPlayer, srcCards)
-
     const tiers = [
       filteredCards(0),
       filteredCards(1),
@@ -156,7 +161,8 @@ const useGame = () => {
     ]
 
     const SIZE = tiers.length
-    const getSize = (i: number) => Math.min((SIZE - i), i? tiers.at(i - 1).length: SIZE)
+    const getLength = (i: number) => tiers.at(i).length - (i === activeTier())
+    const getSize = (i: number) => Math.min((SIZE - i), i? getLength(i - 1): SIZE)
     const sizes = tiers.map((_, i) => getSize(i))
 
     const getStatus = (i: number) => +(tiers.at(i).length < sizes.at(i)? -1: tiers.at(i).length > sizes.at(i)? 1: 0)
@@ -174,6 +180,7 @@ const useGame = () => {
       getTierStatus,
       hasSuit,
       needsFixed,
+      SIZE,
       statuses,
       tiers,
       atk: tiers.map(t => t.length).filter(t => !!t).length,
@@ -250,20 +257,21 @@ const useGame = () => {
     const playerId = curPlayer.id
     const newCards = moveId(cards, idActive, tierZones.at(tier).id, playerId)
     setCards(newCards)
-    dispatch({type: Actions.SetPlayer, payload: {
-      id: playerId,
-      canBuild: false,
-    }})
+
+    const payload: Partial<IPlayer> = { id: playerId }
+    if (Zone.Hand === activeCard()?.idZone) {
+      payload.canBuild = false
+    } else {
+      payload.canMove = false
+    }
+    dispatch({type: Actions.SetPlayer, payload})
   }
 
   const tierDown = () => {
-    const activeCard = cards.find(card => isActive(card.id))
-    if (activeCard) {
-      const tier = tierZones.findIndex(zone => zone.id === activeCard.idZone)
-      if (tier > 0) {
-        const newCards = moveId(cards, idActive, tierZones.at(tier - 1).id, curPlayer.id)
-        setCards(newCards)
-      }
+    const tier = tierZones.findIndex(zone => zone.id === activeCard()?.idZone)
+    if (tier > 0) {
+      const newCards = moveId(cards, idActive, tierZones.at(tier - 1).id, curPlayer.id)
+      setCards(newCards)
     }
   }
 
@@ -300,9 +308,20 @@ const useGame = () => {
   }
 
   const canMoveGroup = (card: ICard): boolean => {
-    return Phase.Main === phase && curPlayer.canMove &&
+    if (Phase.Main === phase && curPlayer.canMove &&
       cardData(card.id).cardType === CardType.Group &&
       tierZones.map(zone => zone.id).includes(card.idZone)
+    ) {
+      const cardTier = +card.idZone.slice(-1)
+      const pyramid = getPyramid(curPlayer.id)
+      const sizes = pyramid.tiers.map(tier => tier.length)
+      return (
+        cardTier === pyramid.SIZE - 1 ||
+        sizes[cardTier] > sizes[cardTier + 1]
+      )
+    } else {
+      return false
+    }
   }
 
   const canPlayArtifact = (card: ICard): boolean => {
@@ -364,6 +383,7 @@ const useGame = () => {
     canTarget,
     canBuildGroup,
     canDiscard,
+    canMoveGroup,
     canPlayArtifact,
     cardData,
     dropCard,
