@@ -1,24 +1,20 @@
 import useGame from "../hooks/useGame"
+import TierButtons from "./TierButtons";
 
 const CardCommands = () => {
   const {
-    curPlayer,
-
     activeCard,
     canBuildGroup,
     canDiscard,
+    canFix,
     canMoveGroup,
     canPlayArtifact,
     dropCard,
-    getPyramid,
     setId,
     playArtifact,
-    playTier,
   } = useGame()
 
   const card = activeCard()
-  const pyramid = getPyramid(curPlayer.id)
-  const SIZE = pyramid.statuses.length
 
   return (
     <>
@@ -28,26 +24,14 @@ const CardCommands = () => {
       </button>
 
       {
-        canBuildGroup(card) ? (
-          pyramid.statuses.toReversed().map((status, idx) => (
-            status < 0 && !pyramid.hasSuit(SIZE - 1 - idx) ? (
-              <button key={idx} onClick={() => playTier(SIZE - 1 - idx)}>
-                Tier {SIZE - idx}
-              </button>
-            ): null
-          ))
-        ): null
+        canBuildGroup(card) || canMoveGroup(card) || canFix(card) ? <TierButtons/>: null
       }
 
       {
-        canMoveGroup(card) ? (
-          pyramid.statuses.toReversed().map((status, idx) => (
-            status < 0 && !pyramid.hasSuit(SIZE - 1 - idx) ? (
-              <button key={idx} onClick={() => playTier(SIZE - 1 - idx)}>
-                Tier {SIZE - idx}
-              </button>
-            ): null
-          ))
+        canDiscard(card) ? (
+          <button onClick={dropCard}>
+            Discard
+          </button>
         ): null
       }
 
@@ -55,14 +39,6 @@ const CardCommands = () => {
         canPlayArtifact(card) ? (
           <button onClick={playArtifact}>
             Play
-          </button>
-        ): null
-      }
-
-      {
-        canDiscard(card) ? (
-          <button onClick={dropCard}>
-            Discard
           </button>
         ): null
       }

@@ -145,13 +145,14 @@ const useGame = () => {
     }
   }
 
-  const activeTier = () => {
+  const getActiveTier = () => {
     const activeZone = activeCard()?.idZone ?? ""
     const matches = activeZone.match(/[0-9]+$/)
     return matches? +matches[0]: -1
   }
 
   const getPyramid = (idPlayer: string, srcCards: ICard[] = cards) => {
+
     const filteredCards = (tier: number) => zoneCards(tierZones.at(tier).id, idPlayer, srcCards)
     const tiers = [
       filteredCards(0),
@@ -159,9 +160,10 @@ const useGame = () => {
       filteredCards(2),
       filteredCards(3),
     ]
-
     const SIZE = tiers.length
-    const getLength = (i: number) => tiers.at(i).length - (i === activeTier())
+
+    const activeTier = getActiveTier()
+    const getLength = (i: number) => tiers.at(i).length - (i === activeTier && Phase.Fix !== phase)
     const getSize = (i: number) => Math.min((SIZE - i), i? getLength(i - 1): SIZE)
     const sizes = tiers.map((_, i) => getSize(i))
 
@@ -176,9 +178,15 @@ const useGame = () => {
       return  tiers.at(i).some(card => cardData(card.id).suit === suit)
     }
 
+    const hasButton = (i: number) => {
+      return  statuses.at(i) < 0 && !hasSuit(i) && (
+        (Phase.Fix === phase)? (i < activeTier): true
+      )
+    }
+
     return {
       getTierStatus,
-      hasSuit,
+      hasButton,
       needsFixed,
       SIZE,
       statuses,
@@ -267,14 +275,6 @@ const useGame = () => {
     dispatch({type: Actions.SetPlayer, payload})
   }
 
-  const tierDown = () => {
-    const tier = tierZones.findIndex(zone => zone.id === activeCard()?.idZone)
-    if (tier > 0) {
-      const newCards = moveId(cards, idActive, tierZones.at(tier - 1).id, curPlayer.id)
-      setCards(newCards)
-    }
-  }
-
   const canAttack = (card: ICard): boolean => {
     const data = cardData(card.id)
     return Phase.Target === phase && tierZones.map(zone => zone.id).includes(card.idZone) &&
@@ -284,10 +284,13 @@ const useGame = () => {
   const canFix = (card: ICard): boolean => {
     const data = cardData(card.id)
     const pyramid = getPyramid(curPlayer.id)
-    return Phase.Fix === phase &&
-      tierZones.filter((_, idx) => pyramid.statuses.at(idx) > 0)
-        .map(zone => zone.id).includes(card.idZone) &&
-      data.cardType === CardType.Group
+    return (
+      Phase.Fix === phase && data.cardType === CardType.Group &&
+      tierZones
+        .filter((_, idx) => pyramid.statuses.at(idx) > 0)
+        .map(zone => zone.id)
+        .includes(card.idZone)
+    )
   }
 
   const canTarget = (card: ICard): boolean => {
@@ -383,6 +386,7 @@ const useGame = () => {
     canTarget,
     canBuildGroup,
     canDiscard,
+    canFix,
     canMoveGroup,
     canPlayArtifact,
     cardData,
@@ -403,7 +407,6 @@ const useGame = () => {
     setId,
     startGame,
     targetCard,
-    tierDown,
     zoneCards,
   }
 }
